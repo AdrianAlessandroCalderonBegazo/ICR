@@ -21,6 +21,7 @@ const solutions = [
     icon: "bi-lightning-charge",
     title: "Infraestructura Energética",
     text: "Ingeniería y ejecución de infraestructura eléctrica con tecnología confiable.",
+    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1200&q=85"
     image: infraImg,
   }
 ];
@@ -56,7 +57,7 @@ export default function Home() {
                 <Link className="btn icr-btn-primary btn-lg" to="/soluciones">
                   Conoce nuestras soluciones <i className="bi bi-arrow-right"></i>
                 </Link>
-                <Link className="btn icr-btn-light btn-lg" to="/contacto">
+                <Link className="btn icr-btn-light btn-lg" to="/solicitar-asesoria">
                   Solicitar asesoría <i className="bi bi-arrow-right"></i>
                 </Link>
               </div>
@@ -136,7 +137,7 @@ export default function Home() {
               <li>Eficiencia energética</li>
               <li>Retorno de inversión</li>
             </ul>
-            <Link className="btn icr-btn-primary" to="/contacto">
+            <Link className="btn icr-btn-primary" to="/solicitar-asesoria">
               Hablemos de tu proyecto <i className="bi bi-arrow-right"></i>
             </Link>
           </div>
@@ -191,7 +192,7 @@ export default function Home() {
               <h2>¿Tu proyecto necesita energía confiable?</h2>
               <p>Conversemos sobre la solución energética que necesita tu empresa.</p>
             </div>
-            <Link className="btn icr-btn-primary ms-lg-auto" to="/contacto">
+            <Link className="btn icr-btn-primary ms-lg-auto" to="/solicitar-asesoria">
               Solicitar asesoría <i className="bi bi-arrow-right"></i>
             </Link>
           </div>

@@ -1,4 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
+import logo from "../assets/images/logo/icr-logo.svg";
+import { WHATSAPP_URL } from "../config/contact";
 import logo from "../assets/images/logo/logoICR.png";
 
 export default function Navbar() {
@@ -33,10 +35,12 @@ export default function Navbar() {
               <NavLink className="nav-link" to="/soluciones">Soluciones</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/contacto">Contacto</NavLink>
+              <a className="nav-link" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                Contacto
+              </a>
             </li>
           </ul>
-          <Link className="btn icr-btn-primary" to="/contacto">
+          <Link className="btn icr-btn-primary" to="/solicitar-asesoria">
             Solicitar asesoría <i className="bi bi-arrow-right"></i>
           </Link>
         </div>
