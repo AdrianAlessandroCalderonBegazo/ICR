@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo/icr-logo.svg";
+import { WHATSAPP_URL } from "../config/contact";
 
 export default function Footer() {
   return (
@@ -36,7 +37,7 @@ export default function Footer() {
             <h6>Empresa</h6>
             <Link to="/nosotros">Nosotros</Link>
             <Link to="/nosotros">Proyectos</Link>
-            <Link to="/contacto">Trabaja con nosotros</Link>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">Trabaja con nosotros</a>
           </div>
 
           <div className="col-lg-4">
@@ -44,9 +45,9 @@ export default function Footer() {
             <p><i className="bi bi-telephone"></i> +51 999 123 456</p>
             <p><i className="bi bi-envelope"></i> contacto@inversionesicr.com</p>
             <p><i className="bi bi-geo-alt"></i> Arequipa, Perú</p>
-            <Link className="btn icr-btn-outline mt-2" to="/contacto">
+            <a className="btn icr-btn-outline mt-2" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
               Contáctanos <i className="bi bi-arrow-right"></i>
-            </Link>
+            </a>
           </div>
         </div>
 
