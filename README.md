@@ -42,7 +42,7 @@ vite
 Clonar el repositorio:
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone <https://github.com/AdrianAlessandroCalderonBegazo/ICR.git>
 ```
 
 Entrar al proyecto:
@@ -61,12 +61,6 @@ Iniciar el servidor de desarrollo:
 
 ```bash
 npm run dev
-```
-
-Abrir la URL proporcionada por Vite, normalmente:
-
-```text
-http://localhost:5173/
 ```
 
 ## 📁 Estructura
