@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import logo from "../assets/images/logo/icr-logo.svg";
+import logo from "../assets/images/logo/logoICR.png";
 
 export default function Navbar() {
   return (
@@ -7,10 +7,6 @@ export default function Navbar() {
       <div className="container">
         <Link className="navbar-brand icr-brand" to="/">
           <img src={logo} alt="Inversiones ICR" className="brand-mark" />
-          <span>
-            <strong>ICR</strong>
-            <small>INVERSIONES ICR</small>
-          </span>
         </Link>
 
         <button

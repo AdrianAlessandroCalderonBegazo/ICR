@@ -1,15 +1,3 @@
-# Fuente Gotham
-
-`src/styles.css` ya está configurado para usar **Gotham** como tipografía
-principal del sitio (con `@font-face` y fallback a Inter/system-ui si los
-archivos no están presentes).
-
-## ⚠️ Gotham es una fuente comercial
-
-Gotham es propiedad de Hoefler&Co. y **no es de descarga libre** — no se
-puede incluir en este repositorio ni descargar automáticamente. Para
-activarla de verdad necesitan:
-
 1. Comprar/obtener la licencia web de Gotham (p. ej. en
    https://www.typography.com/fonts/gotham/overview o vía Adobe Fonts si
    la organización ya tiene una suscripción).
@@ -38,7 +26,3 @@ de los bloques `@font-face` al inicio de `src/styles.css`.
 No hace falta hacer nada: si estos archivos no existen, el navegador
 simplemente ignora el `@font-face` y usa el resto del stack
 (`Inter, system-ui, ...`), así que el sitio no se rompe.
-
-Si quieren una alternativa **gratuita** visualmente muy cercana a Gotham
-mientras consiguen la licencia, pueden usar **Montserrat** o **Poppins**
-(Google Fonts) como reemplazo temporal.
