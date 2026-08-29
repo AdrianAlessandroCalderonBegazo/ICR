@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/images/logo/logoICR.png";
 import solarImg from "../assets/images/solutions/energiasolar.jpg";
 import respaldoImg from "../assets/images/solutions/respaldo.jpg";
 import infraImg from "../assets/images/solutions/infraestructura.jpeg";
@@ -21,7 +20,6 @@ const solutions = [
     icon: "bi-lightning-charge",
     title: "Infraestructura Energética",
     text: "Ingeniería y ejecución de infraestructura eléctrica con tecnología confiable.",
-    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1200&q=85"
     image: infraImg,
   }
 ];

@@ -27,16 +27,14 @@
 }
 @font-face {
   font-family: "Gotham";
-  src:
-    url("./assets/fonts/Gotham-Black.woff2") format("woff2"),
-    url("./assets/fonts/Gotham-Black.woff") format("woff");
+  src: url("./assets/fonts/Gotham-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
-  --icr-blue: #0004c;
+  --icr-blue: #00004c;
   --icr-cyan: #00b7c2;
   --icr-navy: #000073;
   --icr-mint: #00ffc2;
@@ -127,10 +125,14 @@ a { text-decoration: none; }
 }
 .icr-btn-outline {
   border: 1px solid var(--icr-cyan);
-  color: var(--icr-mint);
+  color: var(--icr-navy);
   border-radius: 7px;
   font-weight: 700;
 }
+.icr-btn-outline:hover { background: var(--icr-cyan); color: #fff; }
+/* Sobre fondo oscuro el contraste se invierte. */
+.icr-footer .icr-btn-outline { color: var(--icr-mint); }
+.icr-footer .icr-btn-outline:hover { background: var(--icr-mint); color: #00104d; }
 
 .hero-section {
   min-height: 100vh;
@@ -203,7 +205,7 @@ a { text-decoration: none; }
   padding: 25px 28px;
   border-right: 1px solid var(--icr-border);
 }
-.strength-card:last-child { border-right: 0; }
+.strengths-row > div:last-child .strength-card { border-right: 0; }
 .strength-card > i {
   display: block;
   color: var(--icr-cyan);
@@ -294,7 +296,7 @@ a { text-decoration: none; }
   min-height: 150px;
   border-right: 1px solid var(--icr-border);
 }
-.stat-card:last-child { border-right: 0; }
+.stats-row > div:last-child .stat-card { border-right: 0; }
 .stat-card strong { color: var(--icr-cyan); font-size: 1.8rem; }
 .stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
@@ -382,7 +384,8 @@ a { text-decoration: none; }
   line-height: 1.5;
 }
 .check-list li i { color: var(--icr-cyan); margin-top: 3px; }
-.contact-form label { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
+.contact-form label,
+.contact-form .field-legend { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
 .contact-form .form-control {
   border-color: var(--icr-border);
   border-radius: 7px;
@@ -437,7 +440,7 @@ a { text-decoration: none; }
   border-radius: 50%;
   border: 2px solid var(--icr-cyan);
   background: var(--icr-light);
-  color: var(--icr-mint);
+  color: var(--icr-cyan);
   font-size: 2.3rem;
   display: grid;
   place-items: center;

@@ -94,7 +94,7 @@ export default function RequestQuote() {
                 if (step1Complete) setStep(2);
               }}
             >
-              <label>Tipo de propiedad</label>
+              <span className="field-legend">Tipo de propiedad</span>
               <div className="choice-group">
                 {PROPERTY_TYPES.map((type) => (
                   <button
@@ -108,7 +108,7 @@ export default function RequestQuote() {
                 ))}
               </div>
 
-              <label>¿Cuánto pagas mensualmente en luz aproximadamente?</label>
+              <span className="field-legend">¿Cuánto pagas mensualmente en luz aproximadamente?</span>
               <div className="choice-group">
                 {BILL_RANGES.map((range) => (
                   <button
@@ -135,37 +135,46 @@ export default function RequestQuote() {
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="row g-3">
                 <div className="col-md-6">
-                  <label>Nombre</label>
+                  <label htmlFor="firstName">Nombre</label>
                   <input
                     className="form-control"
+                    id="firstName"
+                    name="firstName"
                     placeholder="Tu nombre"
                     value={form.firstName}
                     onChange={(event) => updateField("firstName", event.target.value)}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Apellido</label>
+                  <label htmlFor="lastName">Apellido</label>
                   <input
                     className="form-control"
+                    id="lastName"
+                    name="lastName"
                     placeholder="Tu apellido"
                     value={form.lastName}
                     onChange={(event) => updateField("lastName", event.target.value)}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Correo electrónico</label>
+                  <label htmlFor="email">Correo electrónico</label>
                   <input
                     type="email"
                     className="form-control"
+                    id="email"
+                    name="email"
                     placeholder="correo@ejemplo.com"
                     value={form.email}
                     onChange={(event) => updateField("email", event.target.value)}
                   />
                 </div>
                 <div className="col-md-6">
-                  <label>Número de teléfono</label>
+                  <label htmlFor="phone">Número de teléfono</label>
                   <input
+                    type="tel"
                     className="form-control"
+                    id="phone"
+                    name="phone"
                     placeholder="+51 ..."
                     value={form.phone}
                     onChange={(event) => updateField("phone", event.target.value)}
