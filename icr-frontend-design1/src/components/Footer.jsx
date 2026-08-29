@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo/icr-logo.svg";
 import { WHATSAPP_URL } from "../config/contact";
+import logo from "../assets/images/logo/logoICR.png";
 
 export default function Footer() {
   return (
@@ -10,10 +11,6 @@ export default function Footer() {
           <div className="col-lg-4">
             <div className="icr-brand footer-brand mb-3">
               <img src={logo} alt="Inversiones ICR" className="brand-mark" />
-              <span>
-                <strong>ICR</strong>
-                <small>INVERSIONES ICR</small>
-              </span>
             </div>
             <p className="footer-copy">
               Energía confiable, soluciones inteligentes.
