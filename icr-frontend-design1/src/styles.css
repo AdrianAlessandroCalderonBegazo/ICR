@@ -1,3 +1,40 @@
+@font-face {
+  font-family: "Gotham";
+  src:
+    url("./assets/fonts/Gotham-Book.woff2") format("woff2"),
+    url("./assets/fonts/Gotham-Book.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src:
+    url("./assets/fonts/Gotham-Medium.woff2") format("woff2"),
+    url("./assets/fonts/Gotham-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src:
+    url("./assets/fonts/Gotham-Bold.woff2") format("woff2"),
+    url("./assets/fonts/Gotham-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src:
+    url("./assets/fonts/Gotham-Black.woff2") format("woff2"),
+    url("./assets/fonts/Gotham-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --icr-blue: #0004c;
   --icr-cyan: #00b7c2;
@@ -15,7 +52,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   color: var(--icr-text);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Gotham", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #fff;
 }
 a { text-decoration: none; }
@@ -47,14 +84,8 @@ a { text-decoration: none; }
 .brand-mark {
   width: 38px;
   height: 38px;
-  border: 2px solid var(--icr-cyan);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  color: var(--icr-mint);
-  transform: rotate(30deg);
+  object-fit: contain;
 }
-.brand-mark i { transform: rotate(-30deg); }
 .nav-link {
   color: rgba(255,255,255,.85) !important;
   font-size: .92rem;
