@@ -89,3 +89,24 @@ src/
 **Frontend / Prototipo visual**
 
 Actualmente se trabaja únicamente la interfaz y experiencia visual. La lógica, funcionalidades, backend e integración de datos serán implementados posteriormente.
+
+## 📄 Páginas
+
+| Ruta | Contenido |
+|---|---|
+| `/` | Inicio |
+| `/nosotros` | Historia, misión, visión y trayectoria |
+| `/soluciones` | Productos agrupados por desafío |
+| `/proyectos` | Portafolio filtrable por sector |
+| `/calculadora` | Simulador de ahorro solar |
+| `/solicitar-asesoria` | Formulario de cotización en dos pasos |
+
+## ⚙️ Contenido pendiente de reemplazar
+
+Antes de publicar, revisar:
+
+* `src/data/projects.js` — las fichas con `placeholder: true` son plantillas de
+  ejemplo por sector, no proyectos reales.
+* `src/config/calculator.js` — tarifa, horas sol pico y precios por kWp son
+  valores de referencia sin validar contra cifras comerciales de ICR.
+* `src/config/contact.js` — confirmar teléfono, WhatsApp, dirección y RUC.
