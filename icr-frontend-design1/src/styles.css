@@ -699,3 +699,11 @@ a { text-decoration: none; }
   .calc-panel, .calc-result { padding: 26px; }
   .calc-cards { grid-template-columns: 1fr; }
 }
+
+/* Bootstrap aplica a .row.g-5 un margen negativo de 24px por lado, mayor que
+   los 12px de padding del .container: eso desbordaba 12px y dejaba scroll
+   horizontal en todas las páginas por debajo de 768px. Ahí las columnas ya
+   están apiladas o en pares, así que basta con reducir el canal. */
+@media (max-width: 767.98px) {
+  .container > .row.g-5 { --bs-gutter-x: 1.5rem; }
+}
