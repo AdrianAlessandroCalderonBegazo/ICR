@@ -1,5 +1,4 @@
 import { Link, NavLink } from "react-router-dom";
-import logo from "../assets/images/logo/icr-logo.svg";
 import { WHATSAPP_URL } from "../config/contact";
 import logo from "../assets/images/logo/logoICR.png";
 
