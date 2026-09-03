@@ -1,6 +1,20 @@
 backend:
-  name: git-gateway
+  # Sin Netlify: el backend real de producción es GitHub directo, que exige
+  # una app OAuth propia (registrada en GitHub) y un pequeño proxy que haga
+  # el intercambio del código por el token — ver la sección "Producción" de
+  # CMS.md antes de desplegar. Mientras ese proxy no exista, este backend no
+  # es alcanzable, pero no bloquea nada: local_backend (abajo) lo evita por
+  # completo durante el desarrollo.
+  name: github
+  repo: AdrianAlessandroCalderonBegazo/ICR
   branch: main
+
+# Con esto en true, Decap CMS detecta que corre en localhost/127.0.0.1 y
+# habla con el servidor local (`npx decap-server`, puerto 8081) en vez del
+# backend de arriba — así se edita contenido en local sin GitHub, sin OAuth
+# y sin ningún servicio externo. En producción (dominio real) se ignora
+# solo, y ahí sí se usa el backend "github" declarado arriba.
+local_backend: true
 
 # Decap CMS necesita rutas relativas a la RAÍZ del repositorio, no a esta
 # carpeta del frontend — el repo tiene el sitio dentro de icr-frontend-design1/.
