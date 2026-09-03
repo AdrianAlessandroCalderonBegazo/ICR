@@ -43,6 +43,15 @@
   --icr-muted: #68728a;
   --icr-light: #eef7fb;
   --icr-border: #dce7ee;
+
+  /* Escala de formas: antes cada componente definía su propio radio (6, 7, 8,
+     10, 12, 14, 16, 20px) sin relación entre ellos. Se agrupan por rol para
+     que la geometría del sitio se lea como un sistema, no como accidentes. */
+  --radius-sm: 8px;     /* controles: botones, inputs, selects */
+  --radius-md: 14px;    /* contenedores: tarjetas, paneles de formulario */
+  --radius-lg: 20px;    /* paneles grandes: CTA, grillas de la calculadora */
+  --radius-pill: 999px; /* elementos seleccionables/etiquetas: chips, tags */
+  --radius-circle: 50%; /* iconos e indicadores circulares */
 }
 
 * { box-sizing: border-box; }
@@ -103,7 +112,7 @@ a { text-decoration: none; }
   background: var(--icr-mint);
   color: #00104d;
   border: 1px solid var(--icr-mint);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 800;
   padding: .75rem 1.2rem;
 }
@@ -112,21 +121,21 @@ a { text-decoration: none; }
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255,255,255,.75);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
   padding: .75rem 1.2rem;
 }
 .icr-btn-dark {
   background: var(--icr-navy);
   color: #fff;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
   padding: .75rem 1.2rem;
 }
 .icr-btn-outline {
   border: 1px solid var(--icr-cyan);
   color: var(--icr-navy);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
 }
 .icr-btn-outline:hover { background: var(--icr-cyan); color: #fff; }
@@ -141,6 +150,32 @@ a { text-decoration: none; }
   background:
     linear-gradient(90deg, rgba(0,0,73,.98) 0%, rgba(0,0,115,.9) 42%, rgba(0,0,73,.25) 100%),
     url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=2200&q=90") center/cover;
+}
+/* Acento circular difuso, en el mismo ángulo que el patrón diagonal del
+   grid — refuerza el motivo "energía/luz" detrás del texto del hero. */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -8%;
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-circle);
+  background: radial-gradient(circle, rgba(0,255,194,.22), transparent 70%);
+  pointer-events: none;
+}
+/* Corte diagonal al pie del hero, en el mismo ángulo que .hero-grid, para
+   romper el apilado de secciones en rectángulos planos. */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 90px;
+  background: #fff;
+  clip-path: polygon(0 100%, 100% 40%, 100% 100%);
+  pointer-events: none;
 }
 .hero-grid {
   position: absolute;
@@ -213,7 +248,15 @@ a { text-decoration: none; }
   margin-bottom: 22px;
 }
 .strength-card > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4em;
+  padding: .3em .5em;
+  margin-bottom: 4px;
   color: var(--icr-cyan);
+  background: var(--icr-light);
+  border-radius: var(--radius-sm);
   font-weight: 900;
 }
 .strength-card h3 { color: var(--icr-navy); font-size: 1.25rem; font-weight: 800; }
@@ -222,7 +265,7 @@ a { text-decoration: none; }
 .solutions-section { background: var(--icr-light); }
 .solution-card {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 14px 45px rgba(0, 0, 115, .08);
   height: 100%;
@@ -242,7 +285,7 @@ a { text-decoration: none; }
 .solution-icon {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--icr-mint);
   color: var(--icr-navy);
   display: grid;
@@ -297,7 +340,17 @@ a { text-decoration: none; }
   border-right: 1px solid var(--icr-border);
 }
 .stats-row > div:last-child .stat-card { border-right: 0; }
-.stat-card strong { color: var(--icr-cyan); font-size: 1.8rem; }
+.stat-card strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  padding: .15em .4em;
+  color: var(--icr-cyan);
+  background: var(--icr-light);
+  border-radius: var(--radius-sm);
+  font-size: 1.8rem;
+}
 .stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
 
@@ -314,7 +367,7 @@ a { text-decoration: none; }
   height: 85px;
   min-width: 85px;
   border: 1px solid var(--icr-cyan);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   display: grid;
   place-items: center;
   color: var(--icr-mint);
@@ -336,7 +389,7 @@ a { text-decoration: none; }
   width: 35px;
   height: 35px;
   border: 1px solid rgba(0,255,194,.45);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   display: grid !important;
   place-items: center;
   color: var(--icr-mint) !important;
@@ -351,7 +404,7 @@ a { text-decoration: none; }
 .product-placeholder,
 .contact-form {
   border: 1px solid var(--icr-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 35px;
 }
 .simple-service-card { height: 100%; }
@@ -363,7 +416,7 @@ a { text-decoration: none; }
 
 .product-card {
   border: 1px solid var(--icr-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 30px;
   height: 100%;
   display: flex;
@@ -388,7 +441,7 @@ a { text-decoration: none; }
 .contact-form .field-legend { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
 .contact-form .form-control {
   border-color: var(--icr-border);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   padding: 12px 14px;
 }
 .contact-form .form-control:focus {
@@ -403,7 +456,7 @@ a { text-decoration: none; }
   width: 28px;
   height: 28px;
   min-width: 28px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   border: 2px solid var(--icr-border);
   display: grid;
   place-items: center;
@@ -417,7 +470,7 @@ a { text-decoration: none; }
 .choice-group { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0 26px; }
 .choice-chip {
   border: 1px solid var(--icr-border);
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   padding: 13px 20px;
   background: #fff;
   color: var(--icr-text);
@@ -437,7 +490,7 @@ a { text-decoration: none; }
 .quote-thanks-icon {
   width: 84px;
   height: 84px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   border: 2px solid var(--icr-cyan);
   background: var(--icr-light);
   color: var(--icr-cyan);
@@ -510,7 +563,7 @@ a { text-decoration: none; }
   background: #fdf6e7;
   border: 1px solid rgba(199, 138, 32, .35);
   color: #6d4a12;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 16px 20px;
   font-size: .88rem;
   line-height: 1.6;
@@ -529,7 +582,7 @@ a { text-decoration: none; }
   font-family: var(--icr-mono);
   font-size: .78rem;
   padding: 8px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--icr-border);
   background: transparent;
   color: var(--icr-muted);
@@ -544,7 +597,7 @@ a { text-decoration: none; }
 .project-card {
   background: #fff;
   border: 1px solid var(--icr-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -572,7 +625,7 @@ a { text-decoration: none; }
   background: rgba(0, 0, 76, .6);
   border: 1px solid rgba(255, 255, 255, .18);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
 .project-body h3 { color: var(--icr-navy); font-size: 1.1rem; font-weight: 800; }
@@ -581,7 +634,7 @@ a { text-decoration: none; }
   font-size: .76rem;
   color: #6d4a12;
   background: #fdf6e7;
-  border-radius: 6px;
+  border-radius: var(--radius-pill);
   padding: 2px 8px;
   margin-top: 6px;
   align-self: flex-start;
@@ -609,7 +662,7 @@ a { text-decoration: none; }
   gap: 1px;
   background: var(--icr-border);
   border: 1px solid var(--icr-border);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 @media (min-width: 900px) { .calc-grid { grid-template-columns: 1fr 1fr; } }
@@ -626,7 +679,7 @@ a { text-decoration: none; }
   margin-bottom: 8px;
 }
 .calc-field label .out { font-family: var(--icr-mono); color: var(--icr-navy); font-weight: 700; }
-.calc-field .form-select { border-color: var(--icr-border); border-radius: 10px; padding: 12px 14px; }
+.calc-field .form-select { border-color: var(--icr-border); border-radius: var(--radius-sm); padding: 12px 14px; }
 .calc-field .form-select:focus {
   border-color: var(--icr-cyan);
   box-shadow: 0 0 0 .2rem rgba(0, 183, 194, .12);
@@ -635,7 +688,7 @@ a { text-decoration: none; }
 .calc-field input[type=range] {
   width: 100%;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   appearance: none;
   -webkit-appearance: none;
   /* El demo dejaba el segundo tope en 0%, así que la barra nunca se pintaba. */
@@ -649,7 +702,7 @@ a { text-decoration: none; }
   -webkit-appearance: none;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--icr-navy);
   border: 3px solid var(--icr-cyan);
   cursor: pointer;
@@ -657,7 +710,7 @@ a { text-decoration: none; }
 .calc-field input[type=range]::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--icr-navy);
   border: 3px solid var(--icr-cyan);
   cursor: pointer;
@@ -684,7 +737,7 @@ a { text-decoration: none; }
 .calc-result > * { position: relative; }
 .calc-result h2 { color: #fff; font-size: 1.2rem; margin-bottom: 22px; }
 .calc-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.calc-card { background: rgba(255, 255, 255, .06); border-radius: 14px; padding: 18px; }
+.calc-card { background: rgba(255, 255, 255, .06); border-radius: var(--radius-md); padding: 18px; }
 .calc-card .v { display: block; font-family: var(--icr-mono); font-size: 1.5rem; color: var(--icr-mint); }
 .calc-card .l { display: block; font-size: .76rem; color: rgba(255, 255, 255, .62); margin-top: 4px; }
 .calc-note {
