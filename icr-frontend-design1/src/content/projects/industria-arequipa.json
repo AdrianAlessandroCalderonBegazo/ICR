@@ -1,0 +1,22 @@
+{
+  "id": "industria-arequipa",
+  "sector": "industria",
+  "place": "Arequipa",
+  "title": "Planta industrial con techo solar",
+  "text": "Autoconsumo diurno para línea de producción, con retorno de inversión proyectado en menos de 5 años.",
+  "metrics": [
+    {
+      "value": "480 kWp",
+      "label": "Capacidad"
+    },
+    {
+      "value": "4.6 años",
+      "label": "Payback"
+    },
+    {
+      "value": "2023",
+      "label": "Año"
+    }
+  ],
+  "placeholder": true
+}

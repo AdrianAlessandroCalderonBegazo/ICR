@@ -1,0 +1,22 @@
+{
+  "id": "agro-tacna",
+  "sector": "agro",
+  "place": "Tacna",
+  "title": "Bombeo y riego con energía solar",
+  "text": "Sistema para bombeo de agua de riego, reduciendo la dependencia de generadores diésel en campo.",
+  "metrics": [
+    {
+      "value": "150 kWp",
+      "label": "Capacidad"
+    },
+    {
+      "value": "−60%",
+      "label": "Diésel"
+    },
+    {
+      "value": "2023",
+      "label": "Año"
+    }
+  ],
+  "placeholder": true
+}

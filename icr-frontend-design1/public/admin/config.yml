@@ -1,0 +1,58 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Decap CMS necesita rutas relativas a la RAÍZ del repositorio, no a esta
+# carpeta del frontend — el repo tiene el sitio dentro de icr-frontend-design1/.
+media_folder: "icr-frontend-design1/src/assets/images/uploads"
+public_folder: "/src/assets/images/uploads"
+
+collections:
+  - name: "proyectos"
+    label: "Proyectos (portafolio)"
+    label_singular: "Proyecto"
+    description: "Fichas que se muestran en /proyectos, filtrables por sector."
+    folder: "icr-frontend-design1/src/content/projects"
+    create: true
+    slug: "{{fields.id}}"
+    identifier_field: "title"
+    summary: "{{title}} — {{sector}} ({{place}})"
+    fields:
+      - label: "ID"
+        name: "id"
+        widget: "string"
+        hint: "Identificador único, sin espacios ni tildes (ej: mineria-moquegua). Define el nombre del archivo — no lo repitas en otra ficha, y no lo cambies después de creada la ficha."
+      - label: "Sector"
+        name: "sector"
+        widget: "select"
+        options:
+          - { label: "Minería", value: "mineria" }
+          - { label: "Industria", value: "industria" }
+          - { label: "Hogares", value: "hogar" }
+          - { label: "Municipios", value: "municipio" }
+          - { label: "Agroindustria", value: "agro" }
+          - { label: "Retail", value: "retail" }
+      - label: "Lugar"
+        name: "place"
+        widget: "string"
+        hint: "Ej: Arequipa"
+      - label: "Título"
+        name: "title"
+        widget: "string"
+      - label: "Descripción"
+        name: "text"
+        widget: "text"
+      - label: "Métricas"
+        name: "metrics"
+        widget: "list"
+        min: 1
+        max: 4
+        summary: "{{fields.value}} — {{fields.label}}"
+        fields:
+          - { label: "Valor", name: "value", widget: "string", hint: "Ej: 2.4 MW, −38%, 2024" }
+          - { label: "Etiqueta", name: "label", widget: "string", hint: "Ej: Capacidad, Diésel, Año" }
+      - label: "¿Es una ficha de ejemplo (placeholder)?"
+        name: "placeholder"
+        widget: "boolean"
+        default: true
+        hint: "Actívalo mientras los datos sean de ejemplo. Desactívalo al reemplazarlos por los del proyecto real — el sitio muestra un aviso mientras quede alguna ficha en true."

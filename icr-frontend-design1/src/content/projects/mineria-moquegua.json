@@ -1,0 +1,22 @@
+{
+  "id": "mineria-moquegua",
+  "sector": "mineria",
+  "place": "Moquegua",
+  "title": "Planta fotovoltaica para operación minera",
+  "text": "Sistema de gran escala para reducir el consumo de diésel en generación de respaldo, con monitoreo remoto integrado a la operación 24/7.",
+  "metrics": [
+    {
+      "value": "2.4 MW",
+      "label": "Capacidad"
+    },
+    {
+      "value": "−38%",
+      "label": "Diésel"
+    },
+    {
+      "value": "2024",
+      "label": "Año"
+    }
+  ],
+  "placeholder": true
+}
