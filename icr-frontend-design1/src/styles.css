@@ -27,16 +27,14 @@
 }
 @font-face {
   font-family: "Gotham";
-  src:
-    url("./assets/fonts/Gotham-Black.woff2") format("woff2"),
-    url("./assets/fonts/Gotham-Black.woff") format("woff");
+  src: url("./assets/fonts/Gotham-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
-  --icr-blue: #0004c;
+  --icr-blue: #00004c;
   --icr-cyan: #00b7c2;
   --icr-navy: #000073;
   --icr-mint: #00ffc2;
@@ -127,10 +125,14 @@ a { text-decoration: none; }
 }
 .icr-btn-outline {
   border: 1px solid var(--icr-cyan);
-  color: var(--icr-mint);
+  color: var(--icr-navy);
   border-radius: 7px;
   font-weight: 700;
 }
+.icr-btn-outline:hover { background: var(--icr-cyan); color: #fff; }
+/* Sobre fondo oscuro el contraste se invierte. */
+.icr-footer .icr-btn-outline { color: var(--icr-mint); }
+.icr-footer .icr-btn-outline:hover { background: var(--icr-mint); color: #00104d; }
 
 .hero-section {
   min-height: 100vh;
@@ -203,7 +205,7 @@ a { text-decoration: none; }
   padding: 25px 28px;
   border-right: 1px solid var(--icr-border);
 }
-.strength-card:last-child { border-right: 0; }
+.strengths-row > div:last-child .strength-card { border-right: 0; }
 .strength-card > i {
   display: block;
   color: var(--icr-cyan);
@@ -294,7 +296,7 @@ a { text-decoration: none; }
   min-height: 150px;
   border-right: 1px solid var(--icr-border);
 }
-.stat-card:last-child { border-right: 0; }
+.stats-row > div:last-child .stat-card { border-right: 0; }
 .stat-card strong { color: var(--icr-cyan); font-size: 1.8rem; }
 .stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
@@ -382,7 +384,8 @@ a { text-decoration: none; }
   line-height: 1.5;
 }
 .check-list li i { color: var(--icr-cyan); margin-top: 3px; }
-.contact-form label { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
+.contact-form label,
+.contact-form .field-legend { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
 .contact-form .form-control {
   border-color: var(--icr-border);
   border-radius: 7px;
@@ -437,7 +440,7 @@ a { text-decoration: none; }
   border-radius: 50%;
   border: 2px solid var(--icr-cyan);
   background: var(--icr-light);
-  color: var(--icr-mint);
+  color: var(--icr-cyan);
   font-size: 2.3rem;
   display: grid;
   place-items: center;
@@ -461,4 +464,246 @@ a { text-decoration: none; }
   .market-panel { padding: 70px 8%; }
   .footer-bottom { flex-direction: column; }
   .stat-card { border-bottom: 1px solid var(--icr-border); }
+}
+
+/* =========================================================
+   Integración del demo de vista previa
+   Se adoptan sus patrones de layout e interacción (rejillas con
+   divisores de 1px, chips de filtro, panel oscuro de resultados,
+   cifras en monoespaciada, reveal al hacer scroll) manteniendo la
+   paleta y la tipografía Gotham de ICR.
+   La monoespaciada es una pila del sistema: el demo cargaba IBM Plex
+   Mono desde Google Fonts y aquí no se añaden dependencias externas.
+   ========================================================= */
+
+:root {
+  --icr-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* ---- Reveal al entrar en viewport ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---- Realce al pasar el cursor ---- */
+.solution-card,
+.product-card,
+.project-card,
+.calc-card {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.solution-card:hover,
+.product-card:hover,
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 32px -18px rgba(0, 0, 115, .35);
+}
+
+/* ---- Nota para el equipo (contenido pendiente de reemplazar) ---- */
+.editor-note {
+  background: #fdf6e7;
+  border: 1px solid rgba(199, 138, 32, .35);
+  color: #6d4a12;
+  border-radius: 14px;
+  padding: 16px 20px;
+  font-size: .88rem;
+  line-height: 1.6;
+  margin-top: 28px;
+  max-width: 760px;
+}
+.editor-note code {
+  font-family: var(--icr-mono);
+  font-size: .84em;
+  color: #593c0d;
+}
+
+/* ---- Chips de filtro ---- */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 36px 0 8px; }
+.filter-chip {
+  font-family: var(--icr-mono);
+  font-size: .78rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--icr-border);
+  background: transparent;
+  color: var(--icr-muted);
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.filter-chip:hover { background: var(--icr-light); color: var(--icr-navy); border-color: var(--icr-cyan); }
+.filter-chip.active { background: var(--icr-navy); color: #fff; border-color: var(--icr-navy); }
+.filter-chip:active { transform: scale(.95); }
+
+/* ---- Ficha de proyecto ---- */
+.project-card {
+  background: #fff;
+  border: 1px solid var(--icr-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.project-cover {
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--icr-blue), var(--icr-navy));
+}
+.project-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 30% 20%, rgba(0, 255, 194, .28), transparent 55%);
+}
+.project-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  z-index: 1;
+  font-family: var(--icr-mono);
+  font-size: .7rem;
+  color: #fff;
+  background: rgba(0, 0, 76, .6);
+  border: 1px solid rgba(255, 255, 255, .18);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+.project-body h3 { color: var(--icr-navy); font-size: 1.1rem; font-weight: 800; }
+.project-placeholder {
+  display: inline-block;
+  font-size: .76rem;
+  color: #6d4a12;
+  background: #fdf6e7;
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin-top: 6px;
+  align-self: flex-start;
+}
+.project-body p { font-size: .92rem; color: var(--icr-muted); margin-top: 12px; flex: 1; }
+.project-metrics {
+  display: flex;
+  gap: 18px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--icr-border);
+}
+.project-metrics .v {
+  display: block;
+  font-family: var(--icr-mono);
+  font-size: 1.05rem;
+  color: var(--icr-cyan);
+}
+.project-metrics .l { display: block; font-size: .72rem; color: var(--icr-muted); }
+
+/* ---- Simulador de ahorro ---- */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--icr-border);
+  border: 1px solid var(--icr-border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+@media (min-width: 900px) { .calc-grid { grid-template-columns: 1fr 1fr; } }
+
+.calc-panel { background: #fff; padding: 36px; }
+.calc-panel h2 { font-size: 1.2rem; color: var(--icr-navy); margin-bottom: 22px; }
+.calc-field { margin-bottom: 22px; }
+.calc-field label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: .86rem;
+  color: var(--icr-muted);
+  margin-bottom: 8px;
+}
+.calc-field label .out { font-family: var(--icr-mono); color: var(--icr-navy); font-weight: 700; }
+.calc-field .form-select { border-color: var(--icr-border); border-radius: 10px; padding: 12px 14px; }
+.calc-field .form-select:focus {
+  border-color: var(--icr-cyan);
+  box-shadow: 0 0 0 .2rem rgba(0, 183, 194, .12);
+}
+
+.calc-field input[type=range] {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  appearance: none;
+  -webkit-appearance: none;
+  /* El demo dejaba el segundo tope en 0%, así que la barra nunca se pintaba. */
+  background: linear-gradient(
+    90deg,
+    var(--icr-cyan) var(--range-progress, 50%),
+    var(--icr-border) var(--range-progress, 50%)
+  );
+}
+.calc-field input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--icr-navy);
+  border: 3px solid var(--icr-cyan);
+  cursor: pointer;
+}
+.calc-field input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--icr-navy);
+  border: 3px solid var(--icr-cyan);
+  cursor: pointer;
+}
+
+.calc-result {
+  background: var(--icr-navy);
+  color: #fff;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.calc-result::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: .5;
+  pointer-events: none;
+}
+.calc-result > * { position: relative; }
+.calc-result h2 { color: #fff; font-size: 1.2rem; margin-bottom: 22px; }
+.calc-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.calc-card { background: rgba(255, 255, 255, .06); border-radius: 14px; padding: 18px; }
+.calc-card .v { display: block; font-family: var(--icr-mono); font-size: 1.5rem; color: var(--icr-mint); }
+.calc-card .l { display: block; font-size: .76rem; color: rgba(255, 255, 255, .62); margin-top: 4px; }
+.calc-note {
+  font-size: .78rem;
+  color: rgba(255, 255, 255, .55);
+  line-height: 1.55;
+  margin: 22px 0 0;
+}
+.calc-result .btn { margin-top: 22px; }
+
+@media (max-width: 575.98px) {
+  .calc-panel, .calc-result { padding: 26px; }
+  .calc-cards { grid-template-columns: 1fr; }
+}
+
+/* Bootstrap aplica a .row.g-5 un margen negativo de 24px por lado, mayor que
+   los 12px de padding del .container: eso desbordaba 12px y dejaba scroll
+   horizontal en todas las páginas por debajo de 768px. Ahí las columnas ya
+   están apiladas o en pares, así que basta con reducir el canal. */
+@media (max-width: 767.98px) {
+  .container > .row.g-5 { --bs-gutter-x: 1.5rem; }
 }

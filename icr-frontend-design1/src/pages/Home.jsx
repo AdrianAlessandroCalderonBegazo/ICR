@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/images/logo/logoICR.png";
 import solarImg from "../assets/images/solutions/energiasolar.jpg";
 import respaldoImg from "../assets/images/solutions/respaldo.jpg";
 import infraImg from "../assets/images/solutions/infraestructura.jpeg";
