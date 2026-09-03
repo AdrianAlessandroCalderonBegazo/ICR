@@ -10,21 +10,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <!-- Los correos de invitación/recuperación de Netlify Identity (el login
-         del panel de contenido en /admin) redirigen a la raíz del sitio con
-         un token en la URL. Este script debe estar aquí, no solo en /admin,
-         para capturar ese token y abrir el diálogo de "crear contraseña". -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
-    </script>
   </body>
 </html>
