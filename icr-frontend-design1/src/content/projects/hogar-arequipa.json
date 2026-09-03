@@ -1,0 +1,22 @@
+{
+  "id": "hogar-arequipa",
+  "sector": "hogar",
+  "place": "Arequipa",
+  "title": "Vivienda con recibo de luz a cero",
+  "text": "Sistema residencial dimensionado a partir del consumo real de 12 meses de recibos.",
+  "metrics": [
+    {
+      "value": "6.2 kWp",
+      "label": "Capacidad"
+    },
+    {
+      "value": "100%",
+      "label": "Cobertura"
+    },
+    {
+      "value": "2025",
+      "label": "Año"
+    }
+  ],
+  "placeholder": true
+}

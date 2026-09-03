@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { PROJECTS, SECTORS } from "../data/projects";
+import { SECTORS } from "../data/projects";
+import { PROJECTS } from "../data/loadProjects";
 import useReveal from "../hooks/useReveal";
+
+const SECTOR_LABELS = Object.fromEntries(SECTORS.map((s) => [s.id, s.label]));
 
 export default function Projects() {
   const [sector, setSector] = useState("all");
@@ -28,9 +31,13 @@ export default function Projects() {
         {hasPlaceholders && (
           <div className="editor-note" role="note">
             <strong>Nota para el equipo ICR:</strong> las fichas marcadas como
-            ejemplo son plantillas por sector. Reemplaza cliente, ubicación,
-            capacidad real y foto en <code>src/data/projects.js</code>, y quita
-            el campo <code>placeholder</code> de cada ficha ya publicable.
+            ejemplo son plantillas por sector. Edítalas desde{" "}
+            <a href="/admin/" target="_blank" rel="noopener noreferrer">
+              /admin
+            </a>{" "}
+            (o en <code>src/content/projects/</code>) con cliente, ubicación y
+            capacidad real, y quita el campo <code>placeholder</code> de cada
+            ficha ya publicable.
           </div>
         )}
 
@@ -54,7 +61,7 @@ export default function Projects() {
               <article className="project-card reveal h-100">
                 <div className="project-cover">
                   <span className="project-tag">
-                    {project.sectorLabel} · {project.place}
+                    {SECTOR_LABELS[project.sector] ?? project.sector} · {project.place}
                   </span>
                 </div>
                 <div className="project-body">
@@ -66,7 +73,7 @@ export default function Projects() {
                   )}
                   <p>{project.text}</p>
                   <div className="project-metrics">
-                    {project.metrics.map(([value, label]) => (
+                    {project.metrics.map(({ value, label }) => (
                       <div key={label}>
                         <span className="v">{value}</span>
                         <span className="l">{label}</span>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Inversiones ICR — Panel de contenido</title>
+  </head>
+  <body>
+    <!-- Este panel es Decap CMS (antes Netlify CMS): un editor de contenido
+         que no necesita backend propio. Lee/escribe directamente sobre este
+         repositorio de Git mediante el backend "git-gateway" configurado en
+         config.yml. Requiere que el sitio esté desplegado en Netlify con
+         Identity + Git Gateway habilitados — ver icr-frontend-design1/CMS.md
+         para el paso a paso de esa configuración inicial (única y manual). -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

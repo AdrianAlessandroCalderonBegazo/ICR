@@ -575,6 +575,11 @@ a { text-decoration: none; }
   font-size: .84em;
   color: #593c0d;
 }
+.editor-note a {
+  color: #593c0d;
+  text-decoration: underline;
+  font-weight: 700;
+}
 
 /* ---- Chips de filtro ---- */
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 36px 0 8px; }
@@ -759,4 +764,48 @@ a { text-decoration: none; }
    están apiladas o en pares, así que basta con reducir el canal. */
 @media (max-width: 767.98px) {
   .container > .row.g-5 { --bs-gutter-x: 1.5rem; }
+}
+
+/* ---- Botón flotante de WhatsApp ---- */
+.whatsapp-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 900;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-circle);
+  background: #25d366;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+  box-shadow: 0 14px 30px -8px rgba(0, 0, 76, .45);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.whatsapp-fab:hover,
+.whatsapp-fab:focus-visible {
+  transform: scale(1.07);
+  box-shadow: 0 16px 34px -6px rgba(0, 0, 76, .55);
+  color: #fff;
+}
+.whatsapp-fab::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-circle);
+  border: 2px solid rgba(37, 211, 102, .55);
+  animation: whatsapp-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes whatsapp-pulse {
+  0% { transform: scale(.85); opacity: .8; }
+  70% { transform: scale(1.28); opacity: 0; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-fab::after { animation: none; display: none; }
+}
+@media (max-width: 480px) {
+  .whatsapp-fab { right: 16px; bottom: 16px; width: 52px; height: 52px; font-size: 1.5rem; }
 }
