@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import solarImg from "../assets/images/solutions/energiasolar.jpg";
 import respaldoImg from "../assets/images/solutions/respaldo.jpg";
 import infraImg from "../assets/images/solutions/infraestructura.jpeg";
+import usePortada from "../hooks/usePortada";
 
 const solutions = [
   {
@@ -32,6 +33,8 @@ const strengths = [
 ];
 
 export default function Home() {
+  const portada = usePortada();
+
   return (
     <>
       <section className="hero-section">
@@ -40,23 +43,19 @@ export default function Home() {
         <div className="container position-relative">
           <div className="row align-items-center min-vh-100 py-5">
             <div className="col-lg-6 hero-content">
-              <span className="eyebrow">INVERSIONES ICR</span>
+              <span className="eyebrow">{portada.eyebrow}</span>
               <h1>
-                Energía confiable.<br />
-                Soluciones <span>inteligentes.</span>
+                {portada.titulo_linea1}<br />
+                {portada.titulo_linea2} <span>{portada.titulo_destacado}</span>
               </h1>
               <div className="hero-line"></div>
-              <p>
-                Diseñamos e implementamos soluciones energéticas que combinan
-                ingeniería, tecnología y equipos confiables para garantizar
-                eficiencia y continuidad operativa.
-              </p>
+              <p>{portada.descripcion}</p>
               <div className="d-flex flex-wrap gap-3">
-                <Link className="btn icr-btn-primary btn-lg" to="/soluciones">
-                  Conoce nuestras soluciones <i className="bi bi-arrow-right"></i>
+                <Link className="btn icr-btn-primary btn-lg" to={portada.cta_primario_link}>
+                  {portada.cta_primario_texto} <i className="bi bi-arrow-right"></i>
                 </Link>
-                <Link className="btn icr-btn-light btn-lg" to="/solicitar-asesoria">
-                  Solicitar asesoría <i className="bi bi-arrow-right"></i>
+                <Link className="btn icr-btn-light btn-lg" to={portada.cta_secundario_link}>
+                  {portada.cta_secundario_texto} <i className="bi bi-arrow-right"></i>
                 </Link>
               </div>
             </div>

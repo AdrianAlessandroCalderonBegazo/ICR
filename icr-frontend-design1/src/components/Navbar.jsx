@@ -42,6 +42,12 @@ export default function Navbar() {
               <NavLink className="nav-link" to="/soluciones" onClick={close}>Soluciones</NavLink>
             </li>
             <li className="nav-item">
+              <NavLink className="nav-link" to="/proyectos" onClick={close}>Proyectos</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/calculadora" onClick={close}>Calculadora</NavLink>
+            </li>
+            <li className="nav-item">
               <a
                 className="nav-link"
                 href={WHATSAPP_URL}

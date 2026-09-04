@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
-import { WHATSAPP_URL } from "../config/contact";
 import logo from "../assets/images/logo/logoICR.png";
+import {
+  ADDRESS,
+  EMAIL,
+  PHONE,
+  PHONE_TEL,
+  RUC,
+  SOCIALS,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_URL,
+  COVERAGE
+} from "../config/contact";
 
 export default function Footer() {
   return (
@@ -15,9 +25,12 @@ export default function Footer() {
               Energía confiable, soluciones inteligentes.
             </p>
             <div className="socials">
-              <a href="#" aria-label="LinkedIn"><i className="bi bi-linkedin"></i></a>
-              <a href="#" aria-label="Facebook"><i className="bi bi-facebook"></i></a>
-              <a href="#" aria-label="Instagram"><i className="bi bi-instagram"></i></a>
+              <a href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <i className="bi bi-linkedin"></i>
+              </a>
+              <a href={SOCIALS.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <i className="bi bi-facebook"></i>
+              </a>
             </div>
           </div>
 
@@ -26,21 +39,22 @@ export default function Footer() {
             <Link to="/soluciones">Energía Solar</Link>
             <Link to="/soluciones">Respaldo Energético</Link>
             <Link to="/soluciones">Infraestructura</Link>
-            <Link to="/soluciones">Kits solares</Link>
+            <Link to="/calculadora">Calculadora de ahorro</Link>
           </div>
 
           <div className="col-6 col-lg-2">
             <h6>Empresa</h6>
             <Link to="/nosotros">Nosotros</Link>
-            <Link to="/nosotros">Proyectos</Link>
+            <Link to="/proyectos">Proyectos</Link>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">Trabaja con nosotros</a>
           </div>
 
           <div className="col-lg-4">
             <h6>Contacto</h6>
-            <p><i className="bi bi-telephone"></i> +51 999 123 456</p>
-            <p><i className="bi bi-envelope"></i> contacto@inversionesicr.com</p>
-            <p><i className="bi bi-geo-alt"></i> Arequipa, Perú</p>
+            <p><i className="bi bi-telephone"></i> <a href={`tel:${PHONE_TEL}`}>{PHONE}</a></p>
+            <p><i className="bi bi-whatsapp"></i> <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
+            <p><i className="bi bi-envelope"></i> <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+            <p><i className="bi bi-geo-alt"></i> {ADDRESS}</p>
             <a className="btn icr-btn-outline mt-2" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
               Contáctanos <i className="bi bi-arrow-right"></i>
             </a>
@@ -49,8 +63,8 @@ export default function Footer() {
 
         <hr />
         <div className="footer-bottom">
-          <span>© 2026 Inversiones ICR. Todos los derechos reservados.</span>
-          <span>Energía confiable, soluciones inteligentes.</span>
+          <span>© 2026 Inversiones ICR S.R.L. · RUC {RUC} · Todos los derechos reservados</span>
+          <span>{COVERAGE}</span>
         </div>
       </div>
     </footer>

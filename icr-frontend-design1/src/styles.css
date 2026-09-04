@@ -43,6 +43,15 @@
   --icr-muted: #68728a;
   --icr-light: #eef7fb;
   --icr-border: #dce7ee;
+
+  /* Escala de formas: antes cada componente definía su propio radio (6, 7, 8,
+     10, 12, 14, 16, 20px) sin relación entre ellos. Se agrupan por rol para
+     que la geometría del sitio se lea como un sistema, no como accidentes. */
+  --radius-sm: 8px;     /* controles: botones, inputs, selects */
+  --radius-md: 14px;    /* contenedores: tarjetas, paneles de formulario */
+  --radius-lg: 20px;    /* paneles grandes: CTA, grillas de la calculadora */
+  --radius-pill: 999px; /* elementos seleccionables/etiquetas: chips, tags */
+  --radius-circle: 50%; /* iconos e indicadores circulares */
 }
 
 * { box-sizing: border-box; }
@@ -103,7 +112,7 @@ a { text-decoration: none; }
   background: var(--icr-mint);
   color: #00104d;
   border: 1px solid var(--icr-mint);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 800;
   padding: .75rem 1.2rem;
 }
@@ -112,21 +121,21 @@ a { text-decoration: none; }
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255,255,255,.75);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
   padding: .75rem 1.2rem;
 }
 .icr-btn-dark {
   background: var(--icr-navy);
   color: #fff;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
   padding: .75rem 1.2rem;
 }
 .icr-btn-outline {
   border: 1px solid var(--icr-cyan);
   color: var(--icr-navy);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-weight: 700;
 }
 .icr-btn-outline:hover { background: var(--icr-cyan); color: #fff; }
@@ -141,6 +150,32 @@ a { text-decoration: none; }
   background:
     linear-gradient(90deg, rgba(0,0,73,.98) 0%, rgba(0,0,115,.9) 42%, rgba(0,0,73,.25) 100%),
     url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=2200&q=90") center/cover;
+}
+/* Acento circular difuso, en el mismo ángulo que el patrón diagonal del
+   grid — refuerza el motivo "energía/luz" detrás del texto del hero. */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -8%;
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-circle);
+  background: radial-gradient(circle, rgba(0,255,194,.22), transparent 70%);
+  pointer-events: none;
+}
+/* Corte diagonal al pie del hero, en el mismo ángulo que .hero-grid, para
+   romper el apilado de secciones en rectángulos planos. */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 90px;
+  background: #fff;
+  clip-path: polygon(0 100%, 100% 40%, 100% 100%);
+  pointer-events: none;
 }
 .hero-grid {
   position: absolute;
@@ -213,7 +248,15 @@ a { text-decoration: none; }
   margin-bottom: 22px;
 }
 .strength-card > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4em;
+  padding: .3em .5em;
+  margin-bottom: 4px;
   color: var(--icr-cyan);
+  background: var(--icr-light);
+  border-radius: var(--radius-sm);
   font-weight: 900;
 }
 .strength-card h3 { color: var(--icr-navy); font-size: 1.25rem; font-weight: 800; }
@@ -222,7 +265,7 @@ a { text-decoration: none; }
 .solutions-section { background: var(--icr-light); }
 .solution-card {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 14px 45px rgba(0, 0, 115, .08);
   height: 100%;
@@ -242,7 +285,7 @@ a { text-decoration: none; }
 .solution-icon {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: var(--icr-mint);
   color: var(--icr-navy);
   display: grid;
@@ -297,7 +340,17 @@ a { text-decoration: none; }
   border-right: 1px solid var(--icr-border);
 }
 .stats-row > div:last-child .stat-card { border-right: 0; }
-.stat-card strong { color: var(--icr-cyan); font-size: 1.8rem; }
+.stat-card strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  padding: .15em .4em;
+  color: var(--icr-cyan);
+  background: var(--icr-light);
+  border-radius: var(--radius-sm);
+  font-size: 1.8rem;
+}
 .stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
 
@@ -314,7 +367,7 @@ a { text-decoration: none; }
   height: 85px;
   min-width: 85px;
   border: 1px solid var(--icr-cyan);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   display: grid;
   place-items: center;
   color: var(--icr-mint);
@@ -336,7 +389,7 @@ a { text-decoration: none; }
   width: 35px;
   height: 35px;
   border: 1px solid rgba(0,255,194,.45);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   display: grid !important;
   place-items: center;
   color: var(--icr-mint) !important;
@@ -351,7 +404,7 @@ a { text-decoration: none; }
 .product-placeholder,
 .contact-form {
   border: 1px solid var(--icr-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 35px;
 }
 .simple-service-card { height: 100%; }
@@ -363,7 +416,7 @@ a { text-decoration: none; }
 
 .product-card {
   border: 1px solid var(--icr-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 30px;
   height: 100%;
   display: flex;
@@ -388,7 +441,7 @@ a { text-decoration: none; }
 .contact-form .field-legend { display: block; font-weight: 700; margin-bottom: 7px; color: var(--icr-navy); }
 .contact-form .form-control {
   border-color: var(--icr-border);
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   padding: 12px 14px;
 }
 .contact-form .form-control:focus {
@@ -403,7 +456,7 @@ a { text-decoration: none; }
   width: 28px;
   height: 28px;
   min-width: 28px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   border: 2px solid var(--icr-border);
   display: grid;
   place-items: center;
@@ -417,7 +470,7 @@ a { text-decoration: none; }
 .choice-group { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0 26px; }
 .choice-chip {
   border: 1px solid var(--icr-border);
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   padding: 13px 20px;
   background: #fff;
   color: var(--icr-text);
@@ -437,7 +490,7 @@ a { text-decoration: none; }
 .quote-thanks-icon {
   width: 84px;
   height: 84px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   border: 2px solid var(--icr-cyan);
   background: var(--icr-light);
   color: var(--icr-cyan);
@@ -465,3 +518,465 @@ a { text-decoration: none; }
   .footer-bottom { flex-direction: column; }
   .stat-card { border-bottom: 1px solid var(--icr-border); }
 }
+
+/* =========================================================
+   Integración del demo de vista previa
+   Se adoptan sus patrones de layout e interacción (rejillas con
+   divisores de 1px, chips de filtro, panel oscuro de resultados,
+   cifras en monoespaciada, reveal al hacer scroll) manteniendo la
+   paleta y la tipografía Gotham de ICR.
+   La monoespaciada es una pila del sistema: el demo cargaba IBM Plex
+   Mono desde Google Fonts y aquí no se añaden dependencias externas.
+   ========================================================= */
+
+:root {
+  --icr-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* ---- Reveal al entrar en viewport ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---- Realce al pasar el cursor ---- */
+.solution-card,
+.product-card,
+.project-card,
+.calc-card {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.solution-card:hover,
+.product-card:hover,
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 32px -18px rgba(0, 0, 115, .35);
+}
+
+/* ---- Nota para el equipo (contenido pendiente de reemplazar) ---- */
+.editor-note {
+  background: #fdf6e7;
+  border: 1px solid rgba(199, 138, 32, .35);
+  color: #6d4a12;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  font-size: .88rem;
+  line-height: 1.6;
+  margin-top: 28px;
+  max-width: 760px;
+}
+.editor-note code {
+  font-family: var(--icr-mono);
+  font-size: .84em;
+  color: #593c0d;
+}
+.editor-note a {
+  color: #593c0d;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* ---- Chips de filtro ---- */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 36px 0 8px; }
+.filter-chip {
+  font-family: var(--icr-mono);
+  font-size: .78rem;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--icr-border);
+  background: transparent;
+  color: var(--icr-muted);
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.filter-chip:hover { background: var(--icr-light); color: var(--icr-navy); border-color: var(--icr-cyan); }
+.filter-chip.active { background: var(--icr-navy); color: #fff; border-color: var(--icr-navy); }
+.filter-chip:active { transform: scale(.95); }
+
+/* ---- Ficha de proyecto ---- */
+.project-card {
+  background: #fff;
+  border: 1px solid var(--icr-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.project-cover {
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--icr-blue), var(--icr-navy));
+}
+.project-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 30% 20%, rgba(0, 255, 194, .28), transparent 55%);
+}
+.project-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  z-index: 1;
+  font-family: var(--icr-mono);
+  font-size: .7rem;
+  color: #fff;
+  background: rgba(0, 0, 76, .6);
+  border: 1px solid rgba(255, 255, 255, .18);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+.project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+.project-body h3 { color: var(--icr-navy); font-size: 1.1rem; font-weight: 800; }
+.project-placeholder {
+  display: inline-block;
+  font-size: .76rem;
+  color: #6d4a12;
+  background: #fdf6e7;
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  margin-top: 6px;
+  align-self: flex-start;
+}
+.project-body p { font-size: .92rem; color: var(--icr-muted); margin-top: 12px; flex: 1; }
+.project-metrics {
+  display: flex;
+  gap: 18px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--icr-border);
+}
+.project-metrics .v {
+  display: block;
+  font-family: var(--icr-mono);
+  font-size: 1.05rem;
+  color: var(--icr-cyan);
+}
+.project-metrics .l { display: block; font-size: .72rem; color: var(--icr-muted); }
+
+/* ---- Simulador de ahorro ---- */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--icr-border);
+  border: 1px solid var(--icr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (min-width: 900px) { .calc-grid { grid-template-columns: 1fr 1fr; } }
+
+.calc-panel { background: #fff; padding: 36px; }
+.calc-panel h2 { font-size: 1.2rem; color: var(--icr-navy); margin-bottom: 22px; }
+.calc-field { margin-bottom: 22px; }
+.calc-field label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: .86rem;
+  color: var(--icr-muted);
+  margin-bottom: 8px;
+}
+.calc-field label .out { font-family: var(--icr-mono); color: var(--icr-navy); font-weight: 700; }
+.calc-field .form-select { border-color: var(--icr-border); border-radius: var(--radius-sm); padding: 12px 14px; }
+.calc-field .form-select:focus {
+  border-color: var(--icr-cyan);
+  box-shadow: 0 0 0 .2rem rgba(0, 183, 194, .12);
+}
+
+.calc-field input[type=range] {
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  appearance: none;
+  -webkit-appearance: none;
+  /* El demo dejaba el segundo tope en 0%, así que la barra nunca se pintaba. */
+  background: linear-gradient(
+    90deg,
+    var(--icr-cyan) var(--range-progress, 50%),
+    var(--icr-border) var(--range-progress, 50%)
+  );
+}
+.calc-field input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-circle);
+  background: var(--icr-navy);
+  border: 3px solid var(--icr-cyan);
+  cursor: pointer;
+}
+.calc-field input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-circle);
+  background: var(--icr-navy);
+  border: 3px solid var(--icr-cyan);
+  cursor: pointer;
+}
+
+.calc-result {
+  background: var(--icr-navy);
+  color: #fff;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.calc-result::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: .5;
+  pointer-events: none;
+}
+.calc-result > * { position: relative; }
+.calc-result h2 { color: #fff; font-size: 1.2rem; margin-bottom: 22px; }
+.calc-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.calc-card { background: rgba(255, 255, 255, .06); border-radius: var(--radius-md); padding: 18px; }
+.calc-card .v { display: block; font-family: var(--icr-mono); font-size: 1.5rem; color: var(--icr-mint); }
+.calc-card .l { display: block; font-size: .76rem; color: rgba(255, 255, 255, .62); margin-top: 4px; }
+.calc-note {
+  font-size: .78rem;
+  color: rgba(255, 255, 255, .55);
+  line-height: 1.55;
+  margin: 22px 0 0;
+}
+.calc-result .btn { margin-top: 22px; }
+
+@media (max-width: 575.98px) {
+  .calc-panel, .calc-result { padding: 26px; }
+  .calc-cards { grid-template-columns: 1fr; }
+}
+
+/* Bootstrap aplica a .row.g-5 un margen negativo de 24px por lado, mayor que
+   los 12px de padding del .container: eso desbordaba 12px y dejaba scroll
+   horizontal en todas las páginas por debajo de 768px. Ahí las columnas ya
+   están apiladas o en pares, así que basta con reducir el canal. */
+@media (max-width: 767.98px) {
+  .container > .row.g-5 { --bs-gutter-x: 1.5rem; }
+}
+
+/* ---- Botón flotante de WhatsApp ---- */
+.whatsapp-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 900;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-circle);
+  background: #25d366;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+  box-shadow: 0 14px 30px -8px rgba(0, 0, 76, .45);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.whatsapp-fab:hover,
+.whatsapp-fab:focus-visible {
+  transform: scale(1.07);
+  box-shadow: 0 16px 34px -6px rgba(0, 0, 76, .55);
+  color: #fff;
+}
+.whatsapp-fab::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-circle);
+  border: 2px solid rgba(37, 211, 102, .55);
+  animation: whatsapp-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes whatsapp-pulse {
+  0% { transform: scale(.85); opacity: .8; }
+  70% { transform: scale(1.28); opacity: 0; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-fab::after { animation: none; display: none; }
+}
+@media (max-width: 480px) {
+  .whatsapp-fab { right: 16px; bottom: 16px; width: 52px; height: 52px; font-size: 1.5rem; }
+}
+
+/* ---- Widget de chatbot (preguntas frecuentes en Markdown) ---- */
+.chatbot-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 92px;
+  z-index: 900;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-circle);
+  background: var(--icr-navy);
+  color: var(--icr-mint);
+  border: none;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  box-shadow: 0 14px 30px -8px rgba(0, 0, 76, .45);
+  transition: transform .2s ease, box-shadow .2s ease;
+  cursor: pointer;
+}
+.chatbot-fab:hover { transform: scale(1.07); }
+
+.chatbot-panel {
+  position: fixed;
+  right: 22px;
+  bottom: 160px;
+  z-index: 900;
+  width: min(340px, calc(100vw - 44px));
+  height: min(440px, calc(100vh - 220px));
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--icr-border);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 76, .5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: chatbot-in .18s ease;
+}
+@keyframes chatbot-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.chatbot-header {
+  background: var(--icr-navy);
+  color: #fff;
+  padding: 14px 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chatbot-close {
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: .75;
+  cursor: pointer;
+  font-size: .9rem;
+}
+.chatbot-close:hover { opacity: 1; }
+.chatbot-body { flex: 1; overflow-y: auto; padding: 16px; }
+.chatbot-hint { color: var(--icr-muted); font-size: .88rem; margin: 0 0 10px; }
+.chatbot-questions { display: flex; flex-direction: column; gap: 8px; }
+.chatbot-question-btn {
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--icr-border);
+  background: var(--icr-light);
+  color: var(--icr-navy);
+  font-weight: 700;
+  font-size: .88rem;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.chatbot-question-btn:hover { background: #fff; border-color: var(--icr-cyan); }
+
+.chatbot-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--icr-cyan);
+  font-weight: 700;
+  font-size: .82rem;
+  padding: 0;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.chatbot-answer-content { font-size: .9rem; line-height: 1.6; color: var(--icr-text); }
+.chatbot-answer-content p { margin: 0 0 10px; }
+.chatbot-answer-content a { color: var(--icr-cyan); font-weight: 700; text-decoration: underline; }
+.chatbot-answer-content ul, .chatbot-answer-content ol { margin: 0 0 10px; padding-left: 20px; }
+.chatbot-answer-content strong { color: var(--icr-navy); }
+
+@media (max-width: 480px) {
+  .chatbot-fab { right: 16px; bottom: 78px; width: 52px; height: 52px; font-size: 1.35rem; }
+  .chatbot-panel { right: 12px; bottom: 138px; }
+}
+
+/* ---- Banner de promoción superpuesto ---- */
+.banner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 0, 76, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: banner-fade-in .15s ease;
+}
+@keyframes banner-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.banner-card {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 30px 70px -20px rgba(0, 0, 76, .5);
+  text-align: center;
+}
+.banner-card h2 {
+  color: var(--icr-navy);
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: -.5px;
+  margin: 6px 0 12px;
+}
+.banner-card p { color: var(--icr-muted); line-height: 1.6; margin-bottom: 22px; }
+.banner-card .btn { display: inline-flex; }
+.banner-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-circle);
+  border: 1px solid var(--icr-border);
+  background: #fff;
+  color: var(--icr-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: .8rem;
+}
+.banner-close:hover { background: var(--icr-light); color: var(--icr-navy); }
+
+/* ---- Aviso de cookies ---- */
+.cookie-banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 950;
+  background: var(--icr-navy);
+  color: rgba(255, 255, 255, .88);
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 20px 50px -14px rgba(0, 0, 76, .5);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.cookie-banner p { margin: 0; font-size: .86rem; line-height: 1.55; flex: 1; min-width: 220px; }
+.cookie-banner .btn { flex: none; }
