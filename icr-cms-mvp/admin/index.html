@@ -54,32 +54,146 @@
           <button id="logout-btn" class="btn-secondary !bg-transparent !border-white/20 !text-white hover:!bg-white/10">Salir</button>
         </div>
       </div>
+      <nav class="max-w-5xl mx-auto px-5 flex gap-1 border-t border-white/10">
+        <button class="nav-tab active" data-view="proyectos" type="button">Proyectos</button>
+        <button class="nav-tab" data-view="portada" type="button">Portada</button>
+        <button class="nav-tab" data-view="chatbot" type="button">Chatbot</button>
+        <button class="nav-tab" data-view="banners" type="button">Banners</button>
+      </nav>
     </header>
 
     <main class="max-w-5xl w-full mx-auto px-5 py-8 flex-1">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="text-xl font-bold text-navy-950">Proyectos del portafolio</h1>
-          <p class="text-sm text-slate-500 mt-1">Se muestran en /proyectos del sitio, filtrables por sector.</p>
+
+      <!-- ---------- Vista: Proyectos ---------- -->
+      <div class="view active" id="view-proyectos">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-xl font-bold text-navy-950">Proyectos del portafolio</h1>
+            <p class="text-sm text-slate-500 mt-1">Se muestran en /proyectos del sitio, filtrables por sector.</p>
+          </div>
+          <button id="new-project-btn" class="btn-primary">+ Nuevo proyecto</button>
         </div>
-        <button id="new-project-btn" class="btn-primary">+ Nuevo proyecto</button>
+
+        <div class="table-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+                <th class="px-4 py-3">Orden</th>
+                <th class="px-4 py-3">Título</th>
+                <th class="px-4 py-3">Sector</th>
+                <th class="px-4 py-3">Lugar</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="projects-tbody"></tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="table-card">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
-              <th class="px-4 py-3">Orden</th>
-              <th class="px-4 py-3">Título</th>
-              <th class="px-4 py-3">Sector</th>
-              <th class="px-4 py-3">Lugar</th>
-              <th class="px-4 py-3">Estado</th>
-              <th class="px-4 py-3"></th>
-            </tr>
-          </thead>
-          <tbody id="projects-tbody"></tbody>
-        </table>
+      <!-- ---------- Vista: Portada ---------- -->
+      <div class="view" id="view-portada">
+        <div class="mb-6">
+          <h1 class="text-xl font-bold text-navy-950">Portada del sitio</h1>
+          <p class="text-sm text-slate-500 mt-1">El bloque principal de Inicio (/). Hay una sola portada — guardar reemplaza el contenido actual.</p>
+        </div>
+
+        <form id="portada-form" class="form-card flex flex-col gap-4 max-w-2xl">
+          <label class="field-label">
+            Eyebrow (texto pequeño sobre el título)
+            <input name="eyebrow" required class="field" />
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label class="field-label">
+              Título — línea 1
+              <input name="titulo_linea1" required class="field" />
+            </label>
+            <label class="field-label">
+              Título — línea 2
+              <input name="titulo_linea2" required class="field" />
+            </label>
+          </div>
+          <label class="field-label">
+            Título — palabra destacada (en menta)
+            <input name="titulo_destacado" required class="field" />
+          </label>
+          <label class="field-label">
+            Descripción
+            <textarea name="descripcion" required rows="3" class="field"></textarea>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label class="field-label">
+              Botón principal — texto
+              <input name="cta_primario_texto" required class="field" />
+            </label>
+            <label class="field-label">
+              Botón principal — enlace
+              <input name="cta_primario_link" required class="field" placeholder="/soluciones" />
+            </label>
+            <label class="field-label">
+              Botón secundario — texto
+              <input name="cta_secundario_texto" required class="field" />
+            </label>
+            <label class="field-label">
+              Botón secundario — enlace
+              <input name="cta_secundario_link" required class="field" placeholder="/solicitar-asesoria" />
+            </label>
+          </div>
+          <div id="portada-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+          <button type="submit" class="btn-loading btn-primary self-start"><span class="btn-label">Guardar portada</span></button>
+        </form>
       </div>
+
+      <!-- ---------- Vista: Chatbot ---------- -->
+      <div class="view" id="view-chatbot">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-xl font-bold text-navy-950">Preguntas frecuentes del chatbot</h1>
+            <p class="text-sm text-slate-500 mt-1">No es IA: son respuestas fijas en Markdown que el visitante ve como botones de acceso rápido.</p>
+          </div>
+          <button id="new-chatbot-btn" class="btn-primary">+ Nueva pregunta</button>
+        </div>
+
+        <div class="table-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+                <th class="px-4 py-3">Orden</th>
+                <th class="px-4 py-3">Pregunta</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="chatbot-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ---------- Vista: Banners ---------- -->
+      <div class="view" id="view-banners">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-xl font-bold text-navy-950">Banners y promociones</h1>
+            <p class="text-sm text-slate-500 mt-1">Se muestran como aviso superpuesto en el sitio mientras la fecha de hoy esté dentro del rango.</p>
+          </div>
+          <button id="new-banner-btn" class="btn-primary">+ Nuevo banner</button>
+        </div>
+
+        <div class="table-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+                <th class="px-4 py-3">Título</th>
+                <th class="px-4 py-3">Vigencia</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="banners-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -143,6 +257,94 @@
 
       <div class="flex justify-end gap-2 mt-2">
         <button type="button" id="modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: crear/editar pregunta del chatbot ============ -->
+  <div id="chatbot-modal" class="hidden modal-overlay">
+    <form id="chatbot-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 id="chatbot-modal-title" class="text-lg font-bold text-navy-950">Nueva pregunta</h2>
+        <button type="button" id="chatbot-modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Pregunta (así la ve el visitante en el botón)
+        <input name="pregunta" required class="field" />
+      </label>
+
+      <label class="field-label">
+        Respuesta en Markdown
+        <textarea name="respuesta_markdown" required rows="6" class="field font-mono text-[13px]"></textarea>
+        <span class="text-xs text-slate-400 font-normal">Admite **negrita**, *cursiva*, [enlaces](/ruta), listas con "- " y saltos de línea.</span>
+      </label>
+
+      <label class="field-label">
+        Orden
+        <input type="number" name="orden" value="0" class="field max-w-24" />
+      </label>
+
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-600">
+        <input type="checkbox" name="activo" checked class="w-4 h-4" />
+        Activo (visible en el sitio)
+      </label>
+
+      <div id="chatbot-form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="chatbot-modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: crear/editar banner ============ -->
+  <div id="banner-modal" class="hidden modal-overlay">
+    <form id="banner-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 id="banner-modal-title" class="text-lg font-bold text-navy-950">Nuevo banner</h2>
+        <button type="button" id="banner-modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Título
+        <input name="titulo" required class="field" />
+      </label>
+      <label class="field-label">
+        Mensaje
+        <textarea name="mensaje" required rows="2" class="field"></textarea>
+      </label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="field-label">
+          Texto del botón (opcional)
+          <input name="enlace_texto" class="field" />
+        </label>
+        <label class="field-label">
+          Enlace del botón (opcional)
+          <input name="enlace_url" class="field" placeholder="/solicitar-asesoria" />
+        </label>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="field-label">
+          Desde
+          <input type="date" name="fecha_inicio" required class="field" />
+        </label>
+        <label class="field-label">
+          Hasta
+          <input type="date" name="fecha_fin" required class="field" />
+        </label>
+      </div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-600">
+        <input type="checkbox" name="activo" checked class="w-4 h-4" />
+        Activo
+      </label>
+
+      <div id="banner-form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="banner-modal-cancel" class="btn-secondary">Cancelar</button>
         <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
       </div>
     </form>
