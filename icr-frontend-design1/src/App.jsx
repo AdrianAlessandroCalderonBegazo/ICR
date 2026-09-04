@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import ChatbotWidget from "./components/ChatbotWidget";
+import BannerOverlay from "./components/BannerOverlay";
+import CookieBanner from "./components/CookieBanner";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -31,6 +34,9 @@ function App() {
 
       <Footer />
       <FloatingWhatsApp />
+      <ChatbotWidget />
+      <BannerOverlay />
+      <CookieBanner />
     </>
   );
 }

@@ -2,6 +2,9 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
 const proyectos = require("./services/projectsService");
+const portada = require("./services/portadaService");
+const chatbot = require("./services/chatbotService");
+const banners = require("./services/bannersService");
 const { AppError } = require("./errors");
 const { login, requireAuth, requirePermission } = require("./auth");
 
@@ -63,6 +66,21 @@ router.get(
   handle(async () => proyectos.listPublic())
 );
 
+router.get(
+  "/portada",
+  handle(async () => portada.get())
+);
+
+router.get(
+  "/chatbot",
+  handle(async () => chatbot.listPublic())
+);
+
+router.get(
+  "/banners/activos",
+  handle(async () => banners.listActivos())
+);
+
 // A partir de aquí, todo requiere sesión válida (Authorization: Bearer <token>)
 router.use(requireAuth);
 
@@ -91,6 +109,66 @@ router.delete(
   requirePermission("proyectos.delete"),
   handle(async (req) => {
     await proyectos.remove(req.params.slug);
+    return { deleted: true };
+  })
+);
+
+router.put(
+  "/admin/portada",
+  requirePermission("portada.update"),
+  handle(async (req) => portada.update(req.body))
+);
+
+router.get(
+  "/admin/chatbot",
+  requirePermission("chatbot.list"),
+  handle(async () => chatbot.listAdmin())
+);
+
+router.post(
+  "/admin/chatbot",
+  requirePermission("chatbot.create"),
+  handle(async (req) => chatbot.create(req.body))
+);
+
+router.put(
+  "/admin/chatbot/:id",
+  requirePermission("chatbot.update"),
+  handle(async (req) => chatbot.update(req.params.id, req.body))
+);
+
+router.delete(
+  "/admin/chatbot/:id",
+  requirePermission("chatbot.delete"),
+  handle(async (req) => {
+    await chatbot.remove(req.params.id);
+    return { deleted: true };
+  })
+);
+
+router.get(
+  "/admin/banners",
+  requirePermission("banners.list"),
+  handle(async () => banners.listAdmin())
+);
+
+router.post(
+  "/admin/banners",
+  requirePermission("banners.create"),
+  handle(async (req) => banners.create(req.body))
+);
+
+router.put(
+  "/admin/banners/:id",
+  requirePermission("banners.update"),
+  handle(async (req) => banners.update(req.params.id, req.body))
+);
+
+router.delete(
+  "/admin/banners/:id",
+  requirePermission("banners.delete"),
+  handle(async (req) => {
+    await banners.remove(req.params.id);
     return { deleted: true };
   })
 );

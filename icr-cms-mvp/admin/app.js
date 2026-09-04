@@ -271,3 +271,303 @@ document.getElementById("project-form").addEventListener("submit", async (e) => 
     showLogin();
   }
 })();
+
+// -------- Navegación por pestañas --------
+function showView(name) {
+  document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
+  document.getElementById(`view-${name}`).classList.add("active");
+  document.querySelectorAll(".nav-tab").forEach((t) => t.classList.toggle("active", t.dataset.view === name));
+
+  if (name === "proyectos") loadProjects();
+  if (name === "portada") loadPortada();
+  if (name === "chatbot") loadChatbotItems();
+  if (name === "banners") loadBanners();
+}
+
+document.querySelectorAll(".nav-tab").forEach((tab) => {
+  tab.addEventListener("click", () => showView(tab.dataset.view));
+});
+
+// -------- Portada --------
+const PORTADA_CAMPOS = [
+  "eyebrow", "titulo_linea1", "titulo_linea2", "titulo_destacado", "descripcion",
+  "cta_primario_texto", "cta_primario_link", "cta_secundario_texto", "cta_secundario_link",
+];
+
+async function loadPortada() {
+  const json = await api("/portada");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo cargar la portada", "error");
+    return;
+  }
+  const form = document.getElementById("portada-form");
+  PORTADA_CAMPOS.forEach((campo) => {
+    form.querySelector(`[name=${campo}]`).value = json.data[campo];
+  });
+}
+
+document.getElementById("portada-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("portada-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {};
+  PORTADA_CAMPOS.forEach((campo) => {
+    body[campo] = form.querySelector(`[name=${campo}]`).value.trim();
+  });
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = await api("/admin/portada", { method: "PUT", body: JSON.stringify(body) });
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast("Portada actualizada");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Chatbot --------
+let chatbotCache = [];
+let editingChatbotId = null;
+
+function chatbotRow(item) {
+  const estado = item.activo
+    ? '<span class="badge badge-ok">Activo</span>'
+    : '<span class="badge badge-muted">Inactivo</span>';
+  return `<tr data-id="${item.item_id}">
+    <td class="px-4 py-3 text-slate-400">${item.orden}</td>
+    <td class="px-4 py-3 font-semibold text-navy-950">${escapeHtml(item.pregunta)}</td>
+    <td class="px-4 py-3">${estado}</td>
+    <td class="px-4 py-3 text-right whitespace-nowrap">
+      <button class="btn-icon edit-chatbot-btn" title="Editar" type="button">✎</button>
+      <button class="btn-icon danger delete-chatbot-btn" title="Borrar" type="button">🗑</button>
+    </td>
+  </tr>`;
+}
+
+async function loadChatbotItems() {
+  const json = await api("/admin/chatbot");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudieron cargar las preguntas", "error");
+    return;
+  }
+  chatbotCache = json.data;
+  const tbody = document.getElementById("chatbot-tbody");
+  tbody.innerHTML = chatbotCache.length
+    ? chatbotCache.map(chatbotRow).join("")
+    : `<tr><td colspan="4" class="px-4 py-8 text-center text-slate-400 italic">Sin preguntas todavía.</td></tr>`;
+
+  tbody.querySelectorAll(".edit-chatbot-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.target.closest("tr").dataset.id;
+      openChatbotModal(chatbotCache.find((i) => i.item_id === id));
+    });
+  });
+  tbody.querySelectorAll(".delete-chatbot-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => deleteChatbotItem(e.target.closest("tr").dataset.id));
+  });
+}
+
+async function deleteChatbotItem(id) {
+  const item = chatbotCache.find((i) => i.item_id === id);
+  if (!confirm(`¿Borrar "${item?.pregunta || id}"? Esta acción no se puede deshacer.`)) return;
+  const json = await api(`/admin/chatbot/${encodeURIComponent(id)}`, { method: "DELETE" });
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo borrar", "error");
+    return;
+  }
+  toast("Pregunta borrada");
+  await loadChatbotItems();
+}
+
+function openChatbotModal(item = null) {
+  editingChatbotId = item ? item.item_id : null;
+  const form = document.getElementById("chatbot-form");
+  form.reset();
+  document.getElementById("chatbot-form-error").classList.add("hidden");
+  document.getElementById("chatbot-modal-title").textContent = item ? "Editar pregunta" : "Nueva pregunta";
+  form.querySelector("[name=pregunta]").value = item?.pregunta || "";
+  form.querySelector("[name=respuesta_markdown]").value = item?.respuesta_markdown || "";
+  form.querySelector("[name=orden]").value = item?.orden ?? 0;
+  form.querySelector("[name=activo]").checked = item ? item.activo : true;
+  document.getElementById("chatbot-modal").classList.remove("hidden");
+}
+
+function closeChatbotModal() {
+  document.getElementById("chatbot-modal").classList.add("hidden");
+  editingChatbotId = null;
+}
+
+document.getElementById("new-chatbot-btn").addEventListener("click", () => openChatbotModal());
+document.getElementById("chatbot-modal-close").addEventListener("click", closeChatbotModal);
+document.getElementById("chatbot-modal-cancel").addEventListener("click", closeChatbotModal);
+
+document.getElementById("chatbot-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("chatbot-form-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {
+    pregunta: form.querySelector("[name=pregunta]").value.trim(),
+    respuesta_markdown: form.querySelector("[name=respuesta_markdown]").value.trim(),
+    orden: Number(form.querySelector("[name=orden]").value) || 0,
+    activo: form.querySelector("[name=activo]").checked,
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = editingChatbotId
+      ? await api(`/admin/chatbot/${encodeURIComponent(editingChatbotId)}`, { method: "PUT", body: JSON.stringify(body) })
+      : await api("/admin/chatbot", { method: "POST", body: JSON.stringify(body) });
+
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast(editingChatbotId ? "Pregunta actualizada" : "Pregunta creada");
+    closeChatbotModal();
+    await loadChatbotItems();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Banners --------
+let bannersCache = [];
+let editingBannerId = null;
+
+function formatFecha(iso) {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function bannerEstado(b) {
+  if (!b.activo) return '<span class="badge badge-muted">Inactivo</span>';
+  const hoy = new Date().toISOString().slice(0, 10);
+  if (hoy < b.fecha_inicio) return '<span class="badge badge-warn">Programado</span>';
+  if (hoy > b.fecha_fin) return '<span class="badge badge-muted">Vencido</span>';
+  return '<span class="badge badge-ok">Vigente</span>';
+}
+
+function bannerRow(b) {
+  return `<tr data-id="${b.banner_id}">
+    <td class="px-4 py-3 font-semibold text-navy-950">${escapeHtml(b.titulo)}</td>
+    <td class="px-4 py-3 text-slate-500">${formatFecha(b.fecha_inicio)} – ${formatFecha(b.fecha_fin)}</td>
+    <td class="px-4 py-3">${bannerEstado(b)}</td>
+    <td class="px-4 py-3 text-right whitespace-nowrap">
+      <button class="btn-icon edit-banner-btn" title="Editar" type="button">✎</button>
+      <button class="btn-icon danger delete-banner-btn" title="Borrar" type="button">🗑</button>
+    </td>
+  </tr>`;
+}
+
+async function loadBanners() {
+  const json = await api("/admin/banners");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudieron cargar los banners", "error");
+    return;
+  }
+  bannersCache = json.data;
+  const tbody = document.getElementById("banners-tbody");
+  tbody.innerHTML = bannersCache.length
+    ? bannersCache.map(bannerRow).join("")
+    : `<tr><td colspan="4" class="px-4 py-8 text-center text-slate-400 italic">Sin banners todavía.</td></tr>`;
+
+  tbody.querySelectorAll(".edit-banner-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.target.closest("tr").dataset.id;
+      openBannerModal(bannersCache.find((b) => b.banner_id === id));
+    });
+  });
+  tbody.querySelectorAll(".delete-banner-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => deleteBanner(e.target.closest("tr").dataset.id));
+  });
+}
+
+async function deleteBanner(id) {
+  const banner = bannersCache.find((b) => b.banner_id === id);
+  if (!confirm(`¿Borrar "${banner?.titulo || id}"? Esta acción no se puede deshacer.`)) return;
+  const json = await api(`/admin/banners/${encodeURIComponent(id)}`, { method: "DELETE" });
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo borrar", "error");
+    return;
+  }
+  toast("Banner borrado");
+  await loadBanners();
+}
+
+function openBannerModal(banner = null) {
+  editingBannerId = banner ? banner.banner_id : null;
+  const form = document.getElementById("banner-form");
+  form.reset();
+  document.getElementById("banner-form-error").classList.add("hidden");
+  document.getElementById("banner-modal-title").textContent = banner ? "Editar banner" : "Nuevo banner";
+  form.querySelector("[name=titulo]").value = banner?.titulo || "";
+  form.querySelector("[name=mensaje]").value = banner?.mensaje || "";
+  form.querySelector("[name=enlace_texto]").value = banner?.enlace_texto || "";
+  form.querySelector("[name=enlace_url]").value = banner?.enlace_url || "";
+  form.querySelector("[name=fecha_inicio]").value = banner?.fecha_inicio || "";
+  form.querySelector("[name=fecha_fin]").value = banner?.fecha_fin || "";
+  form.querySelector("[name=activo]").checked = banner ? banner.activo : true;
+  document.getElementById("banner-modal").classList.remove("hidden");
+}
+
+function closeBannerModal() {
+  document.getElementById("banner-modal").classList.add("hidden");
+  editingBannerId = null;
+}
+
+document.getElementById("new-banner-btn").addEventListener("click", () => openBannerModal());
+document.getElementById("banner-modal-close").addEventListener("click", closeBannerModal);
+document.getElementById("banner-modal-cancel").addEventListener("click", closeBannerModal);
+
+document.getElementById("banner-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("banner-form-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {
+    titulo: form.querySelector("[name=titulo]").value.trim(),
+    mensaje: form.querySelector("[name=mensaje]").value.trim(),
+    enlace_texto: form.querySelector("[name=enlace_texto]").value.trim() || null,
+    enlace_url: form.querySelector("[name=enlace_url]").value.trim() || null,
+    fecha_inicio: form.querySelector("[name=fecha_inicio]").value,
+    fecha_fin: form.querySelector("[name=fecha_fin]").value,
+    activo: form.querySelector("[name=activo]").checked,
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = editingBannerId
+      ? await api(`/admin/banners/${encodeURIComponent(editingBannerId)}`, { method: "PUT", body: JSON.stringify(body) })
+      : await api("/admin/banners", { method: "POST", body: JSON.stringify(body) });
+
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast(editingBannerId ? "Banner actualizado" : "Banner creado");
+    closeBannerModal();
+    await loadBanners();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});

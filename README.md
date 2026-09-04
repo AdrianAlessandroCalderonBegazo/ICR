@@ -103,12 +103,15 @@ Actualmente se trabaja únicamente la interfaz y experiencia visual. La lógica,
 
 ## 🗂️ Panel de contenido (CMS)
 
-El portafolio de `/proyectos` no vive en el código del sitio: lo sirve
-`icr-cms-mvp/`, un backend propio (Node + Express + PostgreSQL) con su
-propio panel de administración — ver
-[`icr-cms-mvp/README.md`](icr-cms-mvp/README.md) para levantarlo en local.
-Sin ese backend corriendo, `/proyectos` muestra un aviso de "no se pudo
-cargar el portafolio"; el resto del sitio sigue funcionando igual.
+El portafolio de `/proyectos`, la portada de la home, las preguntas del
+chatbot y los banners de promoción no viven en el código del sitio: los
+sirve `icr-cms-mvp/`, un backend propio (Node + Express + PostgreSQL) con
+su propio panel de administración — ver
+[`icr-cms-mvp/README.md`](icr-cms-mvp/README.md) para levantarlo en local
+y para el detalle de cada colección. Sin ese backend corriendo, cada pieza
+cae a su comportamiento por defecto ("no se pudo cargar el portafolio" en
+`/proyectos`, textos de respaldo en la portada, chatbot y banner
+simplemente ausentes); el resto del sitio sigue funcionando igual.
 
 ## ⚙️ Contenido pendiente de reemplazar
 

@@ -1,12 +1,33 @@
 # ICR CMS — Panel de contenido del sitio web
 
 Backend propio con base de datos para gestionar el contenido del sitio de
-Inversiones ICR (por ahora, el portafolio de Proyectos). Reemplaza al CMS
-externo (Decap) que se usó como primera versión — mismo stack que
-[ICR-LOGISTICA](https://github.com/andreTYS/ICR-LOGISTICA) (`icr-almacen-mvp`),
-para que el equipo mantenga un solo patrón entre las herramientas internas
-de ICR: Node/Express con capa de servicios, PostgreSQL con SQL directo (sin
-ORM), JWT + bcrypt, y un panel HTML/JS sin framework de frontend.
+Inversiones ICR: el portafolio de Proyectos, la portada (hero) de la home,
+las preguntas frecuentes del chatbot y los banners de promoción por
+vigencia. Reemplaza al CMS externo (Decap) que se usó como primera versión
+— mismo stack que [ICR-LOGISTICA](https://github.com/andreTYS/ICR-LOGISTICA)
+(`icr-almacen-mvp`), para que el equipo mantenga un solo patrón entre las
+herramientas internas de ICR: Node/Express con capa de servicios,
+PostgreSQL con SQL directo (sin ORM), JWT + bcrypt, y un panel HTML/JS sin
+framework de frontend.
+
+## Colecciones
+
+- **Proyectos** — el portafolio de obras (sector, lugar, métricas). Es la
+  única colección heredada de la primera versión (Decap).
+- **Portada** — los textos editables del hero de la home (eyebrow, título,
+  descripción, textos y enlaces de los dos botones). Fila única: siempre
+  existe exactamente una portada, el panel solo permite editarla.
+- **Chatbot** — preguntas frecuentes que alimentan el widget de chat del
+  sitio. Cada ficha tiene una pregunta y una respuesta en **Markdown**
+  (se renderiza en el sitio con `marked` + `dompurify`, así que soporta
+  listas, negritas y enlaces sin arriesgar HTML sin sanear). No es un
+  chatbot con IA generativa: responde únicamente con el contenido que se
+  cargue aquí.
+- **Banners** — avisos superpuestos de promoción, con rango de vigencia
+  (`fecha_inicio`/`fecha_fin`). El sitio solo muestra el banner cuya fecha
+  actual cae dentro del rango y que esté marcado como activo; se recuerda
+  por sesión de navegador si el visitante ya lo cerró (vuelve a aparecer en
+  una sesión nueva mientras siga vigente).
 
 ## Estructura
 
@@ -59,9 +80,38 @@ El panel queda en `http://localhost:4100/` y la API pública en
 `http://localhost:4100/api/proyectos`.
 
 **El sitio web** (`icr-frontend-design1`) necesita que este backend esté
-corriendo para mostrar `/proyectos` — apunta ahí por defecto en desarrollo
-(`src/config/cms.js`). Sin este backend arriba, esa página muestra el aviso
-de "no se pudo cargar el portafolio", el resto del sitio funciona igual.
+corriendo para mostrar `/proyectos`, la portada, el chatbot y los banners —
+apunta ahí por defecto en desarrollo (`src/config/cms.js`). Sin este
+backend arriba, cada pieza cae a su comportamiento por defecto: el
+portafolio muestra el aviso de "no se pudo cargar", la portada usa sus
+textos de respaldo embebidos, y el chatbot y el banner simplemente no se
+muestran — el resto del sitio funciona igual.
+
+### Endpoints de la API
+
+Públicos (sin autenticación):
+
+| Método | Ruta                 | Devuelve                                   |
+|--------|----------------------|---------------------------------------------|
+| GET    | `/api/proyectos`     | Proyectos publicados                        |
+| GET    | `/api/portada`       | La portada actual                           |
+| GET    | `/api/chatbot`       | Preguntas del chatbot activas, en orden     |
+| GET    | `/api/banners/activos` | Banners vigentes hoy y activos             |
+
+De administración (requieren `Authorization: Bearer <token>` de `/api/auth/login`):
+
+| Método | Ruta                         | Permiso            |
+|--------|------------------------------|---------------------|
+| GET/POST | `/api/admin/proyectos`     | `proyectos.list` / `.create` |
+| PUT/DELETE | `/api/admin/proyectos/:slug` | `proyectos.update` / `.delete` |
+| PUT    | `/api/admin/portada`         | `portada.update`   |
+| GET/POST | `/api/admin/chatbot`       | `chatbot.list` / `.create` |
+| PUT/DELETE | `/api/admin/chatbot/:id`  | `chatbot.update` / `.delete` |
+| GET/POST | `/api/admin/banners`       | `banners.list` / `.create` |
+| PUT/DELETE | `/api/admin/banners/:id`  | `banners.update` / `.delete` |
+
+El rol `EDITOR` tiene todos los permisos anteriores salvo los de usuarios;
+`ADMIN` tiene acceso total (`*`).
 
 ### Tests
 
