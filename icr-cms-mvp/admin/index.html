@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Inversiones ICR — Panel de contenido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!-- Tailwind se compila a style.css en tiempo de desarrollo (ver admin/README) — sin build step en runtime. -->
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+  <!-- ============ LOGIN ============ -->
+  <div id="login-screen" class="login-screen min-h-screen flex items-center justify-center bg-navy-950 bg-[radial-gradient(circle_at_15%_15%,rgba(0,183,194,0.25),transparent_45%),radial-gradient(circle_at_85%_85%,rgba(0,255,194,0.12),transparent_40%),linear-gradient(160deg,#00004C_0%,#000073_100%)] p-4">
+    <form id="login-form" class="w-full max-w-sm bg-white rounded-2xl shadow-2xl shadow-black/40 p-8 flex flex-col gap-5">
+      <div class="flex items-center justify-center gap-3 mb-2">
+        <span class="w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-accent-400 text-navy-950 font-extrabold flex items-center justify-center text-sm shadow-glow">IC</span>
+        <div>
+          <div class="font-bold text-navy-950 leading-tight">Inversiones ICR</div>
+          <div class="text-xs text-slate-500 leading-tight">Panel de contenido del sitio web</div>
+        </div>
+      </div>
+      <label class="flex flex-col gap-1.5 text-sm font-semibold text-slate-600">
+        Correo
+        <input name="email" type="email" required placeholder="editor@inversionesicr.com" autocomplete="username" class="field" />
+      </label>
+      <label class="flex flex-col gap-1.5 text-sm font-semibold text-slate-600">
+        Contraseña
+        <input name="password" type="password" required placeholder="••••••••" autocomplete="current-password" class="field" />
+      </label>
+      <button type="submit" class="btn-loading btn-primary relative w-full mt-1">
+        <span class="btn-label">Ingresar</span>
+      </button>
+      <div id="login-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+    </form>
+  </div>
+
+  <!-- ============ APP SHELL ============ -->
+  <div class="hidden min-h-screen flex flex-col" id="app-shell">
+    <header class="bg-navy-950 text-white">
+      <div class="max-w-5xl mx-auto px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-accent to-accent-400 text-navy-950 font-extrabold flex items-center justify-center text-[13px]">IC</span>
+          <div>
+            <div class="font-bold text-[15px] leading-tight">Inversiones ICR</div>
+            <div class="text-[11px] text-white/50 leading-tight">Panel de contenido</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="session-user" class="text-sm text-white/70"></span>
+          <button id="logout-btn" class="btn-secondary !bg-transparent !border-white/20 !text-white hover:!bg-white/10">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-5xl w-full mx-auto px-5 py-8 flex-1">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-xl font-bold text-navy-950">Proyectos del portafolio</h1>
+          <p class="text-sm text-slate-500 mt-1">Se muestran en /proyectos del sitio, filtrables por sector.</p>
+        </div>
+        <button id="new-project-btn" class="btn-primary">+ Nuevo proyecto</button>
+      </div>
+
+      <div class="table-card">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+              <th class="px-4 py-3">Orden</th>
+              <th class="px-4 py-3">Título</th>
+              <th class="px-4 py-3">Sector</th>
+              <th class="px-4 py-3">Lugar</th>
+              <th class="px-4 py-3">Estado</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody id="projects-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ MODAL: crear/editar proyecto ============ -->
+  <div id="project-modal" class="hidden modal-overlay">
+    <form id="project-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 id="modal-title" class="text-lg font-bold text-navy-950">Nuevo proyecto</h2>
+        <button type="button" id="modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Identificador (slug)
+        <input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="mineria-moquegua" class="field" />
+        <span class="text-xs text-slate-400 font-normal">Minúsculas, números y guiones. No se puede cambiar una vez creado.</span>
+      </label>
+
+      <label class="field-label">
+        Sector
+        <select name="sector" required class="field">
+          <option value="mineria">Minería</option>
+          <option value="industria">Industria</option>
+          <option value="hogar">Hogares</option>
+          <option value="municipio">Municipios</option>
+          <option value="agro">Agroindustria</option>
+          <option value="retail">Retail</option>
+        </select>
+      </label>
+
+      <label class="field-label">
+        Lugar
+        <input name="lugar" required placeholder="Arequipa" class="field" />
+      </label>
+
+      <label class="field-label">
+        Título
+        <input name="titulo" required class="field" />
+      </label>
+
+      <label class="field-label">
+        Descripción
+        <textarea name="descripcion" required rows="3" class="field"></textarea>
+      </label>
+
+      <div class="field-label">
+        Métricas (de 1 a 4)
+        <div id="metrics-rows" class="flex flex-col gap-2"></div>
+        <button type="button" id="add-metric-btn" class="btn-secondary self-start text-xs !py-1.5 !px-3 mt-1">+ Agregar métrica</button>
+      </div>
+
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-600">
+        <input type="checkbox" name="placeholder" class="w-4 h-4" />
+        Es una ficha de ejemplo (placeholder)
+      </label>
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-600">
+        <input type="checkbox" name="publicado" checked class="w-4 h-4" />
+        Publicado (visible en el sitio)
+      </label>
+
+      <div id="form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-4 right-4 flex flex-col gap-2 z-50"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

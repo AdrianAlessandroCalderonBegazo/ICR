@@ -101,12 +101,21 @@ Actualmente se trabaja únicamente la interfaz y experiencia visual. La lógica,
 | `/calculadora` | Simulador de ahorro solar |
 | `/solicitar-asesoria` | Formulario de cotización en dos pasos |
 
+## 🗂️ Panel de contenido (CMS)
+
+El portafolio de `/proyectos` no vive en el código del sitio: lo sirve
+`icr-cms-mvp/`, un backend propio (Node + Express + PostgreSQL) con su
+propio panel de administración — ver
+[`icr-cms-mvp/README.md`](icr-cms-mvp/README.md) para levantarlo en local.
+Sin ese backend corriendo, `/proyectos` muestra un aviso de "no se pudo
+cargar el portafolio"; el resto del sitio sigue funcionando igual.
+
 ## ⚙️ Contenido pendiente de reemplazar
 
 Antes de publicar, revisar:
 
-* `src/data/projects.js` — las fichas con `placeholder: true` son plantillas de
-  ejemplo por sector, no proyectos reales.
+* Las fichas del portafolio marcadas como ejemplo (`placeholder`) en el
+  panel de `icr-cms-mvp` son plantillas por sector, no proyectos reales.
 * `src/config/calculator.js` — tarifa, horas sol pico y precios por kWp son
   valores de referencia sin validar contra cifras comerciales de ICR.
 * `src/config/contact.js` — confirmar teléfono, WhatsApp, dirección y RUC.

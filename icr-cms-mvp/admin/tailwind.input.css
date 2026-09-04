@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* Mismos tokens de marca que icr-almacen-mvp/frontend — un solo lenguaje
+   visual entre las herramientas internas de ICR, no una paleta nueva por
+   cada módulo. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-navy-950: #00004C;
+  --color-navy-900: #000073;
+  --color-accent: #00B7C2;
+  --color-accent-400: #00FFC2;
+  --color-accent-600: #009aa4;
+  --shadow-glow: 0 0 0 1px rgba(0,183,194,0.15), 0 8px 24px -8px rgba(0,0,76,0.35);
+}
+
+.hidden { display: none !important; }
+body { font-feature-settings: "cv11"; }
+
+/* -------- Form fields -------- */
+.field {
+  padding: 9px 11px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1a1f2c;
+  background: #fff;
+  font-family: inherit;
+  width: 100%;
+}
+.field:focus { outline: none; box-shadow: 0 0 0 2px rgba(0,183,194,0.45); border-color: #00B7C2; }
+.field-label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #667085; font-weight: 600; }
+
+.form-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+.table-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+.table-card thead tr th:first-child { border-top-left-radius: 12px; }
+.table-card thead tr th:last-child { border-top-right-radius: 12px; }
+.table-card tbody td { border-bottom: 1px solid #f1f5f9; }
+.table-card tbody tr:last-child td { border-bottom: none; }
+.table-card tbody tr:hover td { background: #f0fdfe; }
+
+/* -------- Buttons -------- */
+.btn-primary {
+  padding: 10px 20px; border-radius: 8px; border: none;
+  background: #00004C; color: #fff; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: background .15s ease;
+}
+.btn-primary:hover { background: #000073; }
+.btn-primary:disabled { opacity: .5; cursor: default; }
+.btn-secondary {
+  padding: 9px 18px; border-radius: 8px; border: 1px solid #e2e8f0;
+  background: #fff; color: #00004C; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: background .15s ease;
+}
+.btn-secondary:hover { background: #f8fafc; }
+.btn-danger {
+  padding: 9px 18px; border-radius: 8px; border: 1px solid #fecdd3;
+  background: #fff1f2; color: #e11d48; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: background .15s ease;
+}
+.btn-danger:hover { background: #ffe4e6; }
+
+.btn-icon {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e8f0;
+  background: #fff; color: #00004C; display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s ease;
+}
+.btn-icon:hover { background: #f0fdfe; border-color: #00B7C2; }
+.btn-icon.danger { color: #e11d48; }
+.btn-icon.danger:hover { background: #fff1f2; border-color: #fecdd3; }
+
+.btn-loading { position: relative; }
+.btn-loading:disabled { opacity: .7; cursor: default; }
+.btn-loading.loading .btn-label { visibility: hidden; }
+.btn-loading.loading::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 15px; height: 15px;
+  margin: -8px 0 0 -8px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* -------- Badges / toggles -------- */
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 700;
+}
+.badge-ok { background: #ecfdf5; color: #059669; }
+.badge-warn { background: #fffbeb; color: #b45309; }
+.badge-muted { background: #f1f5f9; color: #64748b; }
+
+/* -------- Toast -------- */
+.toast {
+  padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 24px -6px rgba(0,0,76,0.25);
+  animation: toast-in .18s ease; pointer-events: auto; max-width: 320px;
+}
+@keyframes toast-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.toast-out { animation: toast-out .2s ease forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translateX(12px); } }
+.toast.success { background: #ecfdf5; color: #059669; }
+.toast.error { background: #fff1f2; color: #e11d48; }
+
+/* -------- Modal -------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,76,0.45); z-index: 40;
+  display: flex; align-items: flex-start; justify-content: center; padding: 5vh 16px;
+  animation: fade-in .12s ease; overflow-y: auto;
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.modal-card {
+  background: #fff; border-radius: 14px; width: 100%; max-width: 560px;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 60px -12px rgba(0,0,76,0.5);
+}
