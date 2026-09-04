@@ -1,21 +1,23 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SECTORS } from "../data/projects";
-import { PROJECTS } from "../data/loadProjects";
+import { CMS_ADMIN_URL } from "../config/cms";
+import useProjects from "../hooks/useProjects";
 import useReveal from "../hooks/useReveal";
 
 const SECTOR_LABELS = Object.fromEntries(SECTORS.map((s) => [s.id, s.label]));
 
 export default function Projects() {
   const [sector, setSector] = useState("all");
+  const { projects, status } = useProjects();
 
   const visible = useMemo(
-    () => (sector === "all" ? PROJECTS : PROJECTS.filter((p) => p.sector === sector)),
-    [sector]
+    () => (sector === "all" ? projects : projects.filter((p) => p.sector === sector)),
+    [projects, sector]
   );
   const hasPlaceholders = visible.some((p) => p.placeholder);
 
-  useReveal([sector]);
+  useReveal([sector, status]);
 
   return (
     <section className="inner-page section-padding">
@@ -31,13 +33,19 @@ export default function Projects() {
         {hasPlaceholders && (
           <div className="editor-note" role="note">
             <strong>Nota para el equipo ICR:</strong> las fichas marcadas como
-            ejemplo son plantillas por sector. Edítalas desde{" "}
-            <a href="/admin/" target="_blank" rel="noopener noreferrer">
-              /admin
+            ejemplo son plantillas por sector. Edítalas desde el{" "}
+            <a href={CMS_ADMIN_URL} target="_blank" rel="noopener noreferrer">
+              panel de contenido
             </a>{" "}
-            (o en <code>src/content/projects/</code>) con cliente, ubicación y
-            capacidad real, y quita el campo <code>placeholder</code> de cada
-            ficha ya publicable.
+            con cliente, ubicación y capacidad real, y desmarca "ficha de
+            ejemplo" en cada una ya publicable.
+          </div>
+        )}
+
+        {status === "error" && (
+          <div className="editor-note" role="alert">
+            No se pudo cargar el portafolio en este momento. Intenta recargar
+            la página en unos minutos.
           </div>
         )}
 
@@ -55,25 +63,29 @@ export default function Projects() {
           ))}
         </div>
 
+        {status === "loading" && (
+          <p className="lead mt-4" aria-live="polite">Cargando proyectos…</p>
+        )}
+
         <div className="row g-4 mt-2">
           {visible.map((project) => (
-            <div className="col-md-6 col-lg-4" key={project.id}>
+            <div className="col-md-6 col-lg-4" key={project.slug}>
               <article className="project-card reveal h-100">
                 <div className="project-cover">
                   <span className="project-tag">
-                    {SECTOR_LABELS[project.sector] ?? project.sector} · {project.place}
+                    {SECTOR_LABELS[project.sector] ?? project.sector} · {project.lugar}
                   </span>
                 </div>
                 <div className="project-body">
-                  <h3>{project.title}</h3>
+                  <h3>{project.titulo}</h3>
                   {project.placeholder && (
                     <span className="project-placeholder">
                       Ejemplo — reemplazar con proyecto real
                     </span>
                   )}
-                  <p>{project.text}</p>
+                  <p>{project.descripcion}</p>
                   <div className="project-metrics">
-                    {project.metrics.map(({ value, label }) => (
+                    {project.metricas.map(({ value, label }) => (
                       <div key={label}>
                         <span className="v">{value}</span>
                         <span className="l">{label}</span>
