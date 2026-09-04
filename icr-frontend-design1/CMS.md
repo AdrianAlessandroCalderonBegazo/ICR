@@ -101,6 +101,28 @@ Mientras no se complete ninguna de las dos, `/admin` en el dominio de
 producción carga pero el login no responde — es esperable, no es un error
 del código.
 
+**Además**, el servidor web real del VPS (nginx, Apache, Caddy...) necesita
+una regla para que `/admin` (sin slash final) redirija a `/admin/` — sin
+eso, el panel carga pero falla con *"config must have required property..."*
+en vez de mostrar el editor, por la misma razón explicada en la nota técnica
+de más abajo. Ejemplo para nginx sirviendo el `dist/` ya compilado:
+
+```nginx
+location = /admin {
+    return 301 /admin/;
+}
+location /admin/ {
+    try_files $uri $uri/ /admin/index.html;
+}
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+Los bloques `location` van en ese orden (el de `/admin` antes que el `/`
+general) para que nginx no le gane la carrera al fallback del sitio, igual
+que pasaba en Vite.
+
 ## Notas técnicas
 
 - `local_backend: true` en `config.yml` solo se activa cuando el panel se
@@ -114,11 +136,19 @@ del código.
 - `media_folder`/`public_folder` en `config.yml` apuntan a
   `src/assets/images/uploads/` — ahí caen las imágenes que se suban desde
   el panel, si en el futuro se agrega un campo de imagen a alguna colección.
-- `vite.config.js` tiene un middleware pequeño (`adminIndexFallback`) que
-  hace que `/admin` y `/admin/` sirvan `public/admin/index.html` en
-  `npm run dev`. Sin él, el servidor de desarrollo de Vite le gana la
-  carrera a esa ruta con su propio fallback de SPA y termina mostrando la
-  página 404 del sitio en vez del panel. Solo afecta al modo desarrollo: en
-  el build de producción (`vite build` + servir `dist/`) `/admin/` ya
-  funciona directo, sin este middleware, porque ahí no compite con ningún
-  fallback de SPA.
+- `vite.config.js` tiene un middleware pequeño (`adminIndexFallback`) con
+  dos partes:
+  - `/admin` (sin slash) siempre redirige de verdad (301) a `/admin/`, en
+    dev y en `npm run preview`. Sin este redirect, el navegador se queda
+    con "/admin" en la barra de direcciones, y la petición relativa que
+    hace el panel para pedir `config.yml` se resuelve mal: termina yendo a
+    la raíz del sitio en vez de a `/admin/config.yml`, Decap CMS recibe el
+    HTML de la app en lugar del YAML, y falla con
+    *"config must have required property..."* en todas las claves a la
+    vez. Así se manifestó este bug la primera vez.
+  - `/admin/` (con slash) se reescribe a `public/admin/index.html` — pero
+    solo hace falta en `npm run dev`: ahí el propio fallback de SPA de Vite
+    le gana la carrera a esa ruta y muestra la página 404 del sitio en vez
+    del panel. En `npm run preview` esa parte ya funciona sola.
+  - Ninguna de las dos partes cubre el servidor real de producción en el
+    VPS — ver la regla de nginx en la sección "Producción" de más arriba.
