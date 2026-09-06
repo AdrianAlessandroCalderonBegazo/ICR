@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/assets/images/logo/logoICR.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Inversiones ICR — Cotiza tu solución energética." />
+  <title>Solicitar asesoría | Inversiones ICR</title>
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css" />
+  <link rel="stylesheet" href="/assets/vendor/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg icr-navbar fixed-top">
+    <div class="container">
+      <a class="navbar-brand icr-brand" href="/">
+        <img src="/assets/images/logo/logoICR.png" alt="Inversiones ICR" class="brand-mark" />
+      </a>
+      <button class="navbar-toggler" type="button" aria-controls="icrNav" aria-expanded="false" aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="icrNav">
+        <ul class="navbar-nav mx-auto gap-lg-4">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/nosotros">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="/soluciones">Soluciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="/proyectos">Proyectos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/calculadora">Calculadora</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">Contacto</a></li>
+        </ul>
+        <a class="btn icr-btn-primary" href="/solicitar-asesoria">Solicitar asesoría <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="inner-page section-padding">
+      <div class="container">
+        <div class="quote-page" id="quote-page">
+          <span class="eyebrow blue">SOLICITAR ASESORÍA</span>
+          <h1>Cotiza tu solución energética.</h1>
+          <p class="lead">
+            Cuéntanos un poco sobre tu propiedad y tus datos de contacto. Con esta
+            información preparamos una recomendación y cotización a tu medida.
+          </p>
+
+          <div class="quote-steps">
+            <div class="quote-step active" data-step="1">
+              <span class="quote-step-num">1</span>
+              Tu propiedad
+            </div>
+            <div class="quote-step" data-step="2">
+              <span class="quote-step-num">2</span>
+              Tus datos
+            </div>
+          </div>
+
+          <form class="contact-form" id="quote-step1">
+            <span class="field-legend">Tipo de propiedad</span>
+            <div class="choice-group" id="property-type-group"></div>
+
+            <span class="field-legend">¿Cuánto pagas mensualmente en luz aproximadamente?</span>
+            <div class="choice-group" id="bill-range-group"></div>
+
+            <div class="quote-actions">
+              <span></span>
+              <button class="btn icr-btn-primary" type="submit" id="step1-next" disabled>
+                Siguiente <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+
+          <form class="contact-form" id="quote-step2" hidden>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="firstName">Nombre</label>
+                <input class="form-control" id="firstName" name="firstName" placeholder="Tu nombre" />
+              </div>
+              <div class="col-md-6">
+                <label for="lastName">Apellido</label>
+                <input class="form-control" id="lastName" name="lastName" placeholder="Tu apellido" />
+              </div>
+              <div class="col-md-6">
+                <label for="email">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" />
+              </div>
+              <div class="col-md-6">
+                <label for="phone">Número de teléfono</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="+51 ..." />
+              </div>
+            </div>
+
+            <div class="quote-actions">
+              <button class="btn icr-btn-outline" type="button" id="step2-back">
+                <i class="bi bi-arrow-left"></i> Atrás
+              </button>
+              <button class="btn icr-btn-primary" type="submit" disabled>
+                Enviar cotización <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+
+          <div class="quote-thanks" id="quote-thanks" hidden>
+            <div class="quote-thanks-icon"><i class="bi bi-check2"></i></div>
+            <span class="eyebrow blue">SOLICITUD ENVIADA</span>
+            <h1>¡Gracias, <span class="quote-thanks-name"></span>!</h1>
+            <p class="lead">
+              Tu solicitud de cotización ya fue registrada. Nuestro equipo revisará
+              tu información y en un plazo de <strong>1 a 2 días</strong> te
+              contactaremos al <span class="quote-thanks-phone"></span> o al correo
+              <span class="quote-thanks-email"></span> con más información sobre la
+              solución energética ideal para ti.
+            </p>
+            <div class="quote-thanks-actions">
+              <a class="btn icr-btn-dark" href="/">Volver al inicio</a>
+              <a class="btn icr-btn-primary" href="/soluciones">
+                Seguir explorando nuestras soluciones <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="icr-footer">
+    <div class="container py-5">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <div class="icr-brand footer-brand mb-3">
+            <img src="/assets/images/logo/logoICR.png" alt="Inversiones ICR" class="brand-mark" />
+          </div>
+          <p class="footer-copy">Energía confiable, soluciones inteligentes.</p>
+          <div class="socials">
+            <a href="https://www.linkedin.com/company/inversiones-icr/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="https://www.facebook.com/inversionesicr.srl.7/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6>Soluciones</h6>
+          <a href="/soluciones">Energía Solar</a>
+          <a href="/soluciones">Respaldo Energético</a>
+          <a href="/soluciones">Infraestructura</a>
+          <a href="/calculadora">Calculadora de ahorro</a>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6>Empresa</h6>
+          <a href="/nosotros">Nosotros</a>
+          <a href="/proyectos">Proyectos</a>
+          <a href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">Trabaja con nosotros</a>
+        </div>
+
+        <div class="col-lg-4">
+          <h6>Contacto</h6>
+          <p><i class="bi bi-telephone"></i> <a href="tel:982745584">982 745 584</a></p>
+          <p><i class="bi bi-whatsapp"></i> <a href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">983 840 236</a></p>
+          <p><i class="bi bi-envelope"></i> <a href="mailto:contacto@inversionesicr.com">contacto@inversionesicr.com</a></p>
+          <p><i class="bi bi-geo-alt"></i> Calle Pizarro 325 C, Arequipa</p>
+          <a class="btn icr-btn-outline mt-2" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">
+            Contáctanos <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <hr />
+      <div class="footer-bottom">
+        <span>© 2026 Inversiones ICR S.R.L. · RUC 20605309489 · Todos los derechos reservados</span>
+        <span>Arequipa · Moquegua · Tacna · Sur del Perú</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-fab" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Chatear por WhatsApp">
+    <i class="bi bi-whatsapp" aria-hidden="true"></i>
+  </a>
+  <div id="chatbot-widget-root"></div>
+  <div id="banner-overlay-root"></div>
+  <div id="cookie-banner-root"></div>
+
+  <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/quote.js"></script>
+  <script type="module" src="/js/chatbot.js"></script>
+  <script type="module" src="/js/banner.js"></script>
+  <script type="module" src="/js/cookies.js"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/assets/images/logo/logoICR.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Inversiones ICR — Calcula tu ahorro solar en segundos." />
+  <title>Calculadora de ahorro solar | Inversiones ICR</title>
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css" />
+  <link rel="stylesheet" href="/assets/vendor/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg icr-navbar fixed-top">
+    <div class="container">
+      <a class="navbar-brand icr-brand" href="/">
+        <img src="/assets/images/logo/logoICR.png" alt="Inversiones ICR" class="brand-mark" />
+      </a>
+      <button class="navbar-toggler" type="button" aria-controls="icrNav" aria-expanded="false" aria-label="Abrir navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="icrNav">
+        <ul class="navbar-nav mx-auto gap-lg-4">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/nosotros">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="/soluciones">Soluciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="/proyectos">Proyectos</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/calculadora">Calculadora</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">Contacto</a></li>
+        </ul>
+        <a class="btn icr-btn-primary" href="/solicitar-asesoria">Solicitar asesoría <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="inner-page section-padding" id="calculator-page">
+      <div class="container">
+        <span class="eyebrow blue">SIMULADOR</span>
+        <h1>Calcula tu ahorro solar en segundos.</h1>
+        <p class="lead">
+          Ajusta tu recibo de luz y la cobertura que buscas. Es una estimación
+          referencial — la propuesta técnica y comercial real la prepara un
+          ingeniero tras evaluar tu consumo.
+        </p>
+
+        <div class="calc-grid mt-5">
+          <div class="calc-panel">
+            <h2>Tu consumo</h2>
+
+            <div class="calc-field">
+              <label for="bill">
+                Recibo mensual de luz <span class="out" id="bill-out">S/ 350</span>
+              </label>
+              <input type="range" id="bill" min="80" max="5000" step="10" value="350" />
+            </div>
+
+            <div class="calc-field">
+              <label for="coverage">
+                Cobertura que buscas <span class="out" id="coverage-out">90%</span>
+              </label>
+              <input type="range" id="coverage" min="30" max="100" step="5" value="90" />
+            </div>
+
+            <div class="calc-field">
+              <label for="segment">Tipo de instalación</label>
+              <select id="segment" class="form-select"></select>
+            </div>
+
+            <div class="calc-field">
+              <label for="region">Región</label>
+              <select id="region" class="form-select"></select>
+            </div>
+          </div>
+
+          <div class="calc-result">
+            <h2>Tu estimado</h2>
+            <div class="calc-cards" aria-live="polite">
+              <div class="calc-card reveal">
+                <span class="v" id="out-kwp"></span>
+                <span class="l">Tamaño del sistema</span>
+              </div>
+              <div class="calc-card reveal">
+                <span class="v" id="out-inversion"></span>
+                <span class="l">Inversión estimada</span>
+              </div>
+              <div class="calc-card reveal">
+                <span class="v" id="out-ahorro-mensual"></span>
+                <span class="l">Ahorro mensual estimado</span>
+              </div>
+              <div class="calc-card reveal">
+                <span class="v" id="out-payback"></span>
+                <span class="l">Retorno de inversión</span>
+              </div>
+              <div class="calc-card reveal">
+                <span class="v" id="out-co2"></span>
+                <span class="l">CO₂ evitado / año</span>
+              </div>
+              <div class="calc-card reveal">
+                <span class="v" id="out-ahorro-vida-util"></span>
+                <span class="l">Ahorro en <span id="vida-util"></span> años</span>
+              </div>
+            </div>
+
+            <p class="calc-note">
+              Estimación basada en irradiancia promedio del sur del Perú y una
+              tarifa eléctrica referencial. No incluye impuestos ni costos de
+              conexión. Tu propuesta final puede variar según tu ubicación exacta
+              y el consumo real medido.
+            </p>
+
+            <a class="btn icr-btn-primary w-100 justify-content-center" href="/solicitar-asesoria">
+              Quiero mi propuesta real <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="icr-footer">
+    <div class="container py-5">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <div class="icr-brand footer-brand mb-3">
+            <img src="/assets/images/logo/logoICR.png" alt="Inversiones ICR" class="brand-mark" />
+          </div>
+          <p class="footer-copy">Energía confiable, soluciones inteligentes.</p>
+          <div class="socials">
+            <a href="https://www.linkedin.com/company/inversiones-icr/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="https://www.facebook.com/inversionesicr.srl.7/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6>Soluciones</h6>
+          <a href="/soluciones">Energía Solar</a>
+          <a href="/soluciones">Respaldo Energético</a>
+          <a href="/soluciones">Infraestructura</a>
+          <a href="/calculadora">Calculadora de ahorro</a>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6>Empresa</h6>
+          <a href="/nosotros">Nosotros</a>
+          <a href="/proyectos">Proyectos</a>
+          <a href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">Trabaja con nosotros</a>
+        </div>
+
+        <div class="col-lg-4">
+          <h6>Contacto</h6>
+          <p><i class="bi bi-telephone"></i> <a href="tel:982745584">982 745 584</a></p>
+          <p><i class="bi bi-whatsapp"></i> <a href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">983 840 236</a></p>
+          <p><i class="bi bi-envelope"></i> <a href="mailto:contacto@inversionesicr.com">contacto@inversionesicr.com</a></p>
+          <p><i class="bi bi-geo-alt"></i> Calle Pizarro 325 C, Arequipa</p>
+          <a class="btn icr-btn-outline mt-2" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer">
+            Contáctanos <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <hr />
+      <div class="footer-bottom">
+        <span>© 2026 Inversiones ICR S.R.L. · RUC 20605309489 · Todos los derechos reservados</span>
+        <span>Arequipa · Moquegua · Tacna · Sur del Perú</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-fab" href="https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Chatear por WhatsApp">
+    <i class="bi bi-whatsapp" aria-hidden="true"></i>
+  </a>
+  <div id="chatbot-widget-root"></div>
+  <div id="banner-overlay-root"></div>
+  <div id="cookie-banner-root"></div>
+
+  <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/calculator-page.js"></script>
+  <script type="module" src="/js/chatbot.js"></script>
+  <script type="module" src="/js/banner.js"></script>
+  <script type="module" src="/js/cookies.js"></script>
+</body>
+</html>
