@@ -81,7 +81,7 @@ El panel queda en `http://localhost:4100/` y la API pública en
 
 **El sitio web** (`icr-frontend-design1`) necesita que este backend esté
 corriendo para mostrar `/proyectos`, la portada, el chatbot y los banners —
-apunta ahí por defecto en desarrollo (`src/config/cms.js`). Sin este
+apunta ahí por defecto en desarrollo (`public/js/config.js`). Sin este
 backend arriba, cada pieza cae a su comportamiento por defecto: el
 portafolio muestra el aviso de "no se pudo cargar", la portada usa sus
 textos de respaldo embebidos, y el chatbot y el banner simplemente no se
@@ -132,10 +132,12 @@ ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run seed:admin   # una vez, o vía `docke
 el mismo Traefik que sirve `icr-almacen-mvp` (o el sitio principal) — ver
 ese proyecto para el setup de Traefik si todavía no existe en el VPS.
 
-En el sitio (`icr-frontend-design1`), definir en su `.env` de build:
-```
-VITE_CMS_API_URL=https://cms.inversionesicr.com/api
-VITE_CMS_ADMIN_URL=https://cms.inversionesicr.com/
+En el sitio (`icr-frontend-design1`), es HTML/JS puro sin paso de build: edita
+`CMS_API_URL` y `CMS_ADMIN_URL` directamente en `public/js/config.js` antes de
+construir su imagen — ver `icr-frontend-design1/README.md`.
+```js
+export const CMS_API_URL = "https://cms.inversionesicr.com/api";
+export const CMS_ADMIN_URL = "https://cms.inversionesicr.com/";
 ```
 
 Postgres de este módulo es un contenedor y un volumen propios, separados
