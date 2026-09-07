@@ -36,6 +36,24 @@ async function api(path, options = {}) {
   return res.json();
 }
 
+// Subida de imágenes: multipart/form-data, sin el Content-Type de api() (el
+// navegador debe fijar su propio boundary).
+async function uploadFile(path, method, file) {
+  const fd = new FormData();
+  fd.append("imagen", file);
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${getToken()}` },
+    body: fd,
+  });
+  if (res.status === 401) {
+    clearSession();
+    showLogin();
+    throw new Error("Sesión expirada");
+  }
+  return res.json();
+}
+
 // -------- Toasts --------
 function toast(message, type = "success") {
   const container = document.getElementById("toast-container");
@@ -180,6 +198,19 @@ document.getElementById("add-metric-btn").addEventListener("click", () => {
   rows.appendChild(metricRow());
 });
 
+function setProjectImagenUI(url) {
+  const preview = document.getElementById("project-imagen-preview");
+  const placeholder = document.getElementById("project-imagen-placeholder");
+  if (url) {
+    preview.src = url;
+    preview.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  } else {
+    preview.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+}
+
 function openModal(project = null) {
   editingSlug = project ? project.slug : null;
   const form = document.getElementById("project-form");
@@ -202,8 +233,37 @@ function openModal(project = null) {
   const metrics = project?.metricas?.length ? project.metricas : [{ value: "", label: "" }];
   metrics.forEach((m) => rows.appendChild(metricRow(m.value, m.label)));
 
+  const imagenInput = document.getElementById("project-imagen-input");
+  const imagenHint = document.getElementById("project-imagen-hint");
+  imagenInput.value = "";
+  imagenInput.disabled = !project;
+  imagenHint.textContent = project
+    ? "JPG, PNG o WebP. Se sube al instante al elegir el archivo."
+    : "Guarda el proyecto primero — recién ahí se puede subir su foto.";
+  setProjectImagenUI(project?.imagen_url || null);
+
   document.getElementById("project-modal").classList.remove("hidden");
 }
+
+document.getElementById("project-imagen-input").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file || !editingSlug) return;
+  try {
+    const json = await uploadFile(`/admin/proyectos/${encodeURIComponent(editingSlug)}/imagen`, "POST", file);
+    if (json.status !== "success") {
+      toast(json.error?.message || "No se pudo subir la imagen", "error");
+      return;
+    }
+    setProjectImagenUI(json.data.imagen_url);
+    const cached = projectsCache.find((p) => p.slug === editingSlug);
+    if (cached) cached.imagen_url = json.data.imagen_url;
+    toast("Imagen actualizada");
+  } catch {
+    toast("No se pudo subir la imagen", "error");
+  } finally {
+    e.target.value = "";
+  }
+});
 
 function closeModal() {
   document.getElementById("project-modal").classList.add("hidden");
@@ -294,6 +354,19 @@ const PORTADA_CAMPOS = [
   "cta_primario_texto", "cta_primario_link", "cta_secundario_texto", "cta_secundario_link",
 ];
 
+function setPortadaImagenUI(url) {
+  const preview = document.getElementById("portada-imagen-preview");
+  const placeholder = document.getElementById("portada-imagen-placeholder");
+  if (url) {
+    preview.src = url;
+    preview.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  } else {
+    preview.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+}
+
 async function loadPortada() {
   const json = await api("/portada");
   if (json.status !== "success") {
@@ -304,7 +377,26 @@ async function loadPortada() {
   PORTADA_CAMPOS.forEach((campo) => {
     form.querySelector(`[name=${campo}]`).value = json.data[campo];
   });
+  setPortadaImagenUI(json.data.imagen_url);
 }
+
+document.getElementById("portada-imagen-input").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const json = await uploadFile("/admin/portada/imagen", "PUT", file);
+    if (json.status !== "success") {
+      toast(json.error?.message || "No se pudo subir la imagen", "error");
+      return;
+    }
+    setPortadaImagenUI(json.data.imagen_url);
+    toast("Imagen actualizada");
+  } catch {
+    toast("No se pudo subir la imagen", "error");
+  } finally {
+    e.target.value = "";
+  }
+});
 
 document.getElementById("portada-form").addEventListener("submit", async (e) => {
   e.preventDefault();

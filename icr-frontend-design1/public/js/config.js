@@ -8,6 +8,11 @@
 export const CMS_API_URL = "http://localhost:4100/api";
 export const CMS_ADMIN_URL = "http://localhost:4100/";
 
+// Origen del backend, sin el sufijo /api — para armar la URL completa de
+// las imágenes subidas desde el panel (proyectos.imagen_url, portada.imagen_url
+// llegan como rutas relativas: "/uploads/xyz.jpg").
+export const CMS_ORIGIN = CMS_API_URL.replace(/\/api\/?$/, "");
+
 // Datos de contacto de Inversiones ICR S.R.L.
 // Tomados del demo de vista previa — confirmar con el equipo antes de publicar.
 export const RUC = "20605309489";

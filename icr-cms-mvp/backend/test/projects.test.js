@@ -112,3 +112,26 @@ test("remove borra la ficha; una segunda vez falla con PROJECT_NOT_FOUND", async
     (err) => err.code === "PROJECT_NOT_FOUND"
   );
 });
+
+test("setImagen guarda la URL y actualiza updated_at", async () => {
+  const antes = await proyectos.findBySlug("retail-arequipa");
+  await new Promise((r) => setTimeout(r, 10));
+  const despues = await proyectos.setImagen("retail-arequipa", "/uploads/test.jpg");
+  assert.equal(despues.imagen_url, "/uploads/test.jpg");
+  assert.ok(new Date(despues.updated_at) > new Date(antes.updated_at));
+});
+
+test("setImagen contra un slug inexistente falla con PROJECT_NOT_FOUND", async () => {
+  await assert.rejects(
+    () => proyectos.setImagen("no-existe-este-slug", "/uploads/test.jpg"),
+    (err) => err.code === "PROJECT_NOT_FOUND"
+  );
+});
+
+test("listPublic incluye imagen_url (null si no se subió ninguna)", async () => {
+  const items = await proyectos.listPublic();
+  const conImagen = items.find((p) => p.slug === "retail-arequipa");
+  assert.equal(conImagen.imagen_url, "/uploads/test.jpg");
+  const sinImagen = items.find((p) => p.slug !== "retail-arequipa");
+  assert.equal(sinImagen.imagen_url, null);
+});

@@ -1,5 +1,6 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
+const multer = require("multer");
 const router = express.Router();
 const proyectos = require("./services/projectsService");
 const portada = require("./services/portadaService");
@@ -7,6 +8,7 @@ const chatbot = require("./services/chatbotService");
 const banners = require("./services/bannersService");
 const { AppError } = require("./errors");
 const { login, requireAuth, requirePermission } = require("./auth");
+const { upload, processAndSaveImage } = require("./uploads");
 
 // Máximo 10 intentos de login por IP cada 15 minutos, para frenar fuerza bruta
 const loginLimiter = rateLimit({
@@ -172,5 +174,56 @@ router.delete(
     return { deleted: true };
   })
 );
+
+// -------- Imágenes (proyectos y portada) --------
+
+router.post(
+  "/admin/proyectos/:slug/imagen",
+  requirePermission("proyectos.update"),
+  upload.single("imagen"),
+  handle(async (req) => {
+    if (!req.file) throw new AppError("SCHEMA_INVALID", "No se recibió ningún archivo", 400);
+    const url = await processAndSaveImage(req.file);
+    return proyectos.setImagen(req.params.slug, url);
+  })
+);
+
+router.put(
+  "/admin/portada/imagen",
+  requirePermission("portada.update"),
+  upload.single("imagen"),
+  handle(async (req) => {
+    if (!req.file) throw new AppError("SCHEMA_INVALID", "No se recibió ningún archivo", 400);
+    const url = await processAndSaveImage(req.file);
+    return portada.setImagen(url);
+  })
+);
+
+// Maneja errores de multer (tamaño/tipo de archivo, lanzados antes de que el
+// handler de la ruta corra) con el mismo envelope de respuesta que handle().
+router.use((err, req, res, next) => {
+  const requestId = req.body?.request_id || req.query?.request_id || null;
+  if (err instanceof multer.MulterError) {
+    const message = err.code === "LIMIT_FILE_SIZE"
+      ? "El archivo supera el tamaño máximo permitido (5MB)"
+      : err.message;
+    return res.status(400).json({ request_id: requestId, status: "error", data: null, error: { code: "UPLOAD_ERROR", message } });
+  }
+  if (err instanceof AppError) {
+    return res.status(err.status).json({
+      request_id: requestId,
+      status: "error",
+      data: null,
+      error: { code: err.code, message: err.message, details: err.details },
+    });
+  }
+  console.error(err);
+  res.status(500).json({
+    request_id: requestId,
+    status: "error",
+    data: null,
+    error: { code: "INTERNAL_ERROR", message: "Error interno del servidor" },
+  });
+});
 
 module.exports = router;

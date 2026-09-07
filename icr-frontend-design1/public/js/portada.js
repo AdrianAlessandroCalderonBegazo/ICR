@@ -1,4 +1,4 @@
-import { CMS_API_URL } from "./config.js";
+import { CMS_API_URL, CMS_ORIGIN } from "./config.js";
 
 // Trae la portada (hero) editable desde el panel de administración del CMS
 // y actualiza el DOM ya renderizado. Si el backend no responde, se deja el
@@ -33,6 +33,11 @@ async function loadPortada() {
   setLink("cta-primario", data.cta_primario_link);
   setText("cta-secundario-texto", data.cta_secundario_texto);
   setLink("cta-secundario", data.cta_secundario_link);
+
+  if (data.imagen_url) {
+    const hero = document.querySelector(".hero-section");
+    if (hero) hero.style.setProperty("--hero-bg-image", `url("${CMS_ORIGIN}${data.imagen_url}")`);
+  }
 }
 
 loadPortada();

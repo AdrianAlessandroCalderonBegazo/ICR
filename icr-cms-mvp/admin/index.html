@@ -99,6 +99,15 @@
         </div>
 
         <form id="portada-form" class="form-card flex flex-col gap-4 max-w-2xl">
+          <div class="field-label">
+            Imagen de fondo del hero
+            <div class="flex items-center gap-4">
+              <img id="portada-imagen-preview" class="hidden w-32 h-20 object-cover rounded-lg border border-slate-200" alt="Vista previa" />
+              <div id="portada-imagen-placeholder" class="w-32 h-20 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400 text-center px-2">Sin imagen (usa el fondo por defecto)</div>
+              <input type="file" id="portada-imagen-input" accept="image/jpeg,image/png,image/webp" class="field" />
+            </div>
+            <span class="text-xs text-slate-400 font-normal">JPG, PNG o WebP. Se sube al instante al elegir el archivo — no hace falta guardar el formulario.</span>
+          </div>
           <label class="field-label">
             Eyebrow (texto pequeño sobre el título)
             <input name="eyebrow" required class="field" />
@@ -210,6 +219,16 @@
         <input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="mineria-moquegua" class="field" />
         <span class="text-xs text-slate-400 font-normal">Minúsculas, números y guiones. No se puede cambiar una vez creado.</span>
       </label>
+
+      <div class="field-label">
+        Foto del proyecto
+        <div class="flex items-center gap-4">
+          <img id="project-imagen-preview" class="hidden w-32 h-20 object-cover rounded-lg border border-slate-200" alt="Vista previa" />
+          <div id="project-imagen-placeholder" class="w-32 h-20 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400 text-center px-2">Sin foto</div>
+          <input type="file" id="project-imagen-input" accept="image/jpeg,image/png,image/webp" class="field" />
+        </div>
+        <span id="project-imagen-hint" class="text-xs text-slate-400 font-normal">Guarda el proyecto primero — recién ahí se puede subir su foto.</span>
+      </div>
 
       <label class="field-label">
         Sector

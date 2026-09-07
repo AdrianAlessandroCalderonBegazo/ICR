@@ -1,4 +1,4 @@
-import { CMS_API_URL, CMS_ADMIN_URL, SECTORS } from "./config.js";
+import { CMS_API_URL, CMS_ADMIN_URL, CMS_ORIGIN, SECTORS } from "./config.js";
 import { initReveal } from "./reveal.js";
 
 const SECTOR_LABELS = Object.fromEntries(SECTORS.map((s) => [s.id, s.label]));
@@ -47,6 +47,7 @@ async function initProjectsPage() {
       <div class="col-md-6 col-lg-4">
         <article class="project-card reveal h-100">
           <div class="project-cover">
+            ${project.imagen_url ? `<img src="${CMS_ORIGIN}${project.imagen_url}" alt="${escapeHtml(project.titulo)}" loading="lazy" />` : ""}
             <span class="project-tag">${escapeHtml(SECTOR_LABELS[project.sector] ?? project.sector)} · ${escapeHtml(project.lugar)}</span>
           </div>
           <div class="project-body">

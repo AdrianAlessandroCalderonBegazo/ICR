@@ -12,11 +12,12 @@ framework de frontend.
 
 ## Colecciones
 
-- **Proyectos** — el portafolio de obras (sector, lugar, métricas). Es la
-  única colección heredada de la primera versión (Decap).
+- **Proyectos** — el portafolio de obras (sector, lugar, métricas, una foto
+  opcional). Es la única colección heredada de la primera versión (Decap).
 - **Portada** — los textos editables del hero de la home (eyebrow, título,
-  descripción, textos y enlaces de los dos botones). Fila única: siempre
-  existe exactamente una portada, el panel solo permite editarla.
+  descripción, textos y enlaces de los dos botones) más una imagen de fondo
+  opcional. Fila única: siempre existe exactamente una portada, el panel
+  solo permite editarla.
 - **Chatbot** — preguntas frecuentes que alimentan el widget de chat del
   sitio. Cada ficha tiene una pregunta y una respuesta en **Markdown**
   (se renderiza en el sitio con `marked` + `dompurify`, así que soporta
@@ -105,6 +106,8 @@ De administración (requieren `Authorization: Bearer <token>` de `/api/auth/logi
 | GET/POST | `/api/admin/proyectos`     | `proyectos.list` / `.create` |
 | PUT/DELETE | `/api/admin/proyectos/:slug` | `proyectos.update` / `.delete` |
 | PUT    | `/api/admin/portada`         | `portada.update`   |
+| POST   | `/api/admin/proyectos/:slug/imagen` | `proyectos.update` |
+| PUT    | `/api/admin/portada/imagen`  | `portada.update`   |
 | GET/POST | `/api/admin/chatbot`       | `chatbot.list` / `.create` |
 | PUT/DELETE | `/api/admin/chatbot/:id`  | `chatbot.update` / `.delete` |
 | GET/POST | `/api/admin/banners`       | `banners.list` / `.create` |
@@ -112,6 +115,20 @@ De administración (requieren `Authorization: Bearer <token>` de `/api/auth/logi
 
 El rol `EDITOR` tiene todos los permisos anteriores salvo los de usuarios;
 `ADMIN` tiene acceso total (`*`).
+
+### Imágenes (proyectos y portada)
+
+Los dos endpoints de imagen reciben `multipart/form-data` con el archivo en
+el campo `imagen` (JPEG, PNG o WebP, hasta 5MB), lo reescalan a un máximo de
+1600px de lado y lo guardan en `backend/uploads/` (servido en `/uploads/*`).
+Devuelven la fila actualizada, con `imagen_url` apuntando a la ruta pública
+del archivo (ej. `/uploads/<uuid>.jpg`) — el sitio antepone el dominio del
+backend a esa ruta al mostrarla (ver `CMS_ORIGIN` en
+`icr-frontend-design1/public/js/config.js`).
+
+`backend/uploads/` no se versiona en git; en producción es un volumen Docker
+propio (`icr_cms_uploads`, ver `docker-compose.yml`) para que las imágenes
+sobrevivan a un rebuild de la imagen del contenedor.
 
 ### Tests
 

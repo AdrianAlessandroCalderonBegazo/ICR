@@ -44,7 +44,7 @@ async function findBySlug(slug) {
 // consume el sitio web (icr-frontend-design1).
 async function listPublic() {
   const r = await pool.query(
-    "SELECT slug, sector, lugar, titulo, descripcion, metricas, placeholder FROM proyectos WHERE publicado = true ORDER BY orden ASC, created_at ASC"
+    "SELECT slug, sector, lugar, titulo, descripcion, metricas, placeholder, imagen_url FROM proyectos WHERE publicado = true ORDER BY orden ASC, created_at ASC"
   );
   return r.rows;
 }
@@ -119,4 +119,15 @@ async function remove(slug) {
   await pool.query("DELETE FROM proyectos WHERE slug = $1", [slug]);
 }
 
-module.exports = { listPublic, listAdmin, findBySlug, create, update, remove, SECTORES_VALIDOS };
+// Separado de update(): la imagen se sube y guarda en un paso propio (ver
+// POST /admin/proyectos/:slug/imagen), no como parte del payload JSON normal.
+async function setImagen(slug, url) {
+  await findBySlug(slug);
+  const r = await pool.query(
+    "UPDATE proyectos SET imagen_url = $1, updated_at = now() WHERE slug = $2 RETURNING *",
+    [url, slug]
+  );
+  return r.rows[0];
+}
+
+module.exports = { listPublic, listAdmin, findBySlug, create, update, remove, setImagen, SECTORES_VALIDOS };
