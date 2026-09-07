@@ -32,6 +32,8 @@ services:
       NODE_ENV: production
       JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en el .env antes de desplegar}
       ALLOWED_ORIGIN: https://${SITE_DOMAIN:-inversionesicr.com}
+    volumes:
+      - icr_cms_uploads:/app/uploads
     depends_on:
       - db
     networks:
@@ -46,6 +48,7 @@ services:
 
 volumes:
   icr_cms_data:
+  icr_cms_uploads:
 
 networks:
   icr_cms_internal:

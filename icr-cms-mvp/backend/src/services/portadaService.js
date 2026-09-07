@@ -53,4 +53,15 @@ async function update(data) {
   return r.rows[0];
 }
 
-module.exports = { get, update };
+// Separado de update(): la imagen se sube y guarda en un paso propio (ver
+// PUT /admin/portada/imagen), no como parte del payload JSON normal.
+async function setImagen(url) {
+  const actual = await get();
+  const r = await pool.query(
+    "UPDATE portada SET imagen_url = $1, updated_at = now() WHERE portada_id = $2 RETURNING *",
+    [url, actual.portada_id]
+  );
+  return r.rows[0];
+}
+
+module.exports = { get, update, setImagen };

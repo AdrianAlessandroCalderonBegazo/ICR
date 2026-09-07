@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const routes = require("./routes");
+const { uploadsDir } = require("./uploads");
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api", routes);
+
+// Fotos de proyectos e imagen de portada, subidas desde el panel.
+app.use("/uploads", express.static(uploadsDir, { maxAge: "7d" }));
 
 // Sirve el panel de administración estático (admin/) para que el MVP
 // funcione con un solo proceso, igual que icr-almacen-mvp.

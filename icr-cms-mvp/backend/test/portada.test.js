@@ -38,3 +38,12 @@ test("update rechaza un campo vacío", async () => {
     (err) => err.code === "SCHEMA_INVALID"
   );
 });
+
+test("setImagen guarda la URL en la misma fila (sigue siendo singleton)", async () => {
+  const antes = await portada.get();
+  await new Promise((r) => setTimeout(r, 10));
+  const despues = await portada.setImagen("/uploads/hero-test.jpg");
+  assert.equal(despues.imagen_url, "/uploads/hero-test.jpg");
+  assert.equal(despues.portada_id, antes.portada_id);
+  assert.ok(new Date(despues.updated_at) > new Date(antes.updated_at));
+});

@@ -31,6 +31,9 @@ CREATE TABLE proyectos (
     -- JSONB en vez de tabla aparte: siempre se lee y se edita junto con el
     -- proyecto, nunca se consulta de forma independiente.
     metricas    JSONB NOT NULL DEFAULT '[]',
+    -- Foto real del proyecto, subida desde el panel (ver POST
+    -- /admin/proyectos/:slug/imagen). NULL hasta que se suba una.
+    imagen_url  TEXT,
     -- Placeholder: ficha de ejemplo pendiente de reemplazar con datos reales
     -- (mismo concepto que ya usaba el sitio con Decap CMS).
     placeholder BOOLEAN NOT NULL DEFAULT true,
@@ -63,6 +66,10 @@ CREATE TABLE portada (
     cta_primario_link  TEXT NOT NULL DEFAULT '/soluciones',
     cta_secundario_texto TEXT NOT NULL DEFAULT 'Solicitar asesoría',
     cta_secundario_link  TEXT NOT NULL DEFAULT '/solicitar-asesoria',
+    -- Imagen de fondo del hero, subida desde el panel (ver PUT
+    -- /admin/portada/imagen). NULL hasta que se suba una: el sitio conserva
+    -- el fondo por defecto definido en el CSS.
+    imagen_url      TEXT,
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
