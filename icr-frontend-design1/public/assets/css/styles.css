@@ -56,6 +56,11 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* Red de seguridad: una sola palabra larga (p. ej. "Ingeniería") en una
+   columna angosta no genera scroll horizontal de página — se parte en vez
+   de desbordar, incluso cuando el desborde es de "tinta" y no afecta el
+   layout box (por eso no aparece en un chequeo de getBoundingClientRect). */
+h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
 body {
   margin: 0;
   color: var(--icr-text);
@@ -203,6 +208,7 @@ a { text-decoration: none; }
   letter-spacing: -3px;
   text-transform: uppercase;
   font-weight: 900;
+  overflow-wrap: break-word;
 }
 .hero-content h1 span { color: var(--icr-mint); }
 .hero-line {
@@ -228,6 +234,7 @@ a { text-decoration: none; }
   font-weight: 900;
   letter-spacing: -1.5px;
   text-transform: uppercase;
+  overflow-wrap: break-word;
 }
 .section-heading p,
 .inner-page .lead {
@@ -259,7 +266,7 @@ a { text-decoration: none; }
   border-radius: var(--radius-sm);
   font-weight: 900;
 }
-.strength-card h3 { color: var(--icr-navy); font-size: 1.25rem; font-weight: 800; }
+.strength-card h3 { color: var(--icr-navy); font-size: 1.25rem; font-weight: 800; overflow-wrap: break-word; }
 .strength-card p { color: var(--icr-muted); line-height: 1.6; font-size: .92rem; }
 
 .solutions-section { background: var(--icr-light); }
@@ -351,7 +358,7 @@ a { text-decoration: none; }
   border-radius: var(--radius-sm);
   font-size: 1.8rem;
 }
-.stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; }
+.stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; overflow-wrap: break-word; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
 
 .cta-section {
@@ -516,7 +523,15 @@ a { text-decoration: none; }
   .hero-content p { font-size: .96rem; }
   .market-panel { padding: 70px 8%; }
   .footer-bottom { flex-direction: column; }
-  .stat-card { border-bottom: 1px solid var(--icr-border); }
+  .stat-card { border-bottom: 1px solid var(--icr-border); padding: 24px 18px; }
+}
+@media (max-width: 575.98px) {
+  /* En 2 columnas (col-6), a este ancho no alcanza el espacio para que
+     palabras como "Experiencia" o "Compromiso" quepan en una sola línea:
+     terminan partiéndose a mitad de sílaba ("Experienci" + "a"). Se apila
+     a 1 columna en vez de seguir angostando el padding. */
+  .stats-row > .col-6 { width: 100%; }
+  .stats-row .stat-card { border-right: 0; }
 }
 
 /* =========================================================
