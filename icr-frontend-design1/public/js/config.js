@@ -1,17 +1,16 @@
 // Configuración compartida del sitio. Módulo ES nativo — sin bundler: el
 // navegador lo carga tal cual con <script type="module">.
 
-// URL del backend del panel de contenido (icr-cms-mvp). Sitio HTML/JS puro,
-// sin paso de build ni variables de entorno: para producción, edita estas
-// dos líneas directamente antes de desplegar (ver icr-cms-mvp/README.md
-// para el dominio real del backend).
-export const CMS_API_URL = "http://localhost:4100/api";
-export const CMS_ADMIN_URL = "http://localhost:4100/";
+// El sitio y el panel de contenido (icr-cms-mvp) los sirve un mismo proceso
+// Express en un solo puerto — no hay dos servidores ni dos orígenes que
+// coordinar, así que estas son rutas relativas al propio sitio.
+export const CMS_API_URL = "/api";
+export const CMS_ADMIN_URL = "/admin/";
 
-// Origen del backend, sin el sufijo /api — para armar la URL completa de
-// las imágenes subidas desde el panel (proyectos.imagen_url, portada.imagen_url
-// llegan como rutas relativas: "/uploads/xyz.jpg").
-export const CMS_ORIGIN = CMS_API_URL.replace(/\/api\/?$/, "");
+// Mismo origen que el sitio: las imágenes subidas desde el panel
+// (proyectos.imagen_url, portada.imagen_url) ya llegan como rutas
+// relativas ("/uploads/xyz.jpg") que resuelven solas, sin prefijo.
+export const CMS_ORIGIN = "";
 
 // Datos de contacto de Inversiones ICR S.R.L.
 // Tomados del demo de vista previa — confirmar con el equipo antes de publicar.

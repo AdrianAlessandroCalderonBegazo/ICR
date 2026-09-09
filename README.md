@@ -14,9 +14,10 @@ Verde menta      #00FFC2
 ## Proyectos
 
 * [`icr-frontend-design1/`](icr-frontend-design1/README.md) — el sitio
-  público (HTML/JS puro, sin bundler, servido por Express).
+  público (HTML/JS puro, sin bundler, sin servidor propio).
 * [`icr-cms-mvp/`](icr-cms-mvp/README.md) — el backend del panel de
-  contenido (Node + Express + PostgreSQL) que alimenta el portafolio, la
-  portada, el chatbot y los banners del sitio.
+  contenido (Node + Express + PostgreSQL); también sirve el sitio de
+  `icr-frontend-design1` — un solo proceso para todo, no dos por separado.
 
-Ver el README de cada proyecto para cómo correrlo en local y desplegarlo.
+Ver el README de cada proyecto para cómo correrlo en local y desplegarlo
+(en la práctica, un único comando dentro de `icr-cms-mvp/backend`).
