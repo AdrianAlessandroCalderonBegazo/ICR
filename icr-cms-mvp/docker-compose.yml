@@ -18,8 +18,11 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      # Contexto = raíz del repo (no icr-cms-mvp/): un solo proceso sirve el
+      # sitio (icr-frontend-design1/public) y el CMS, así que el build
+      # necesita alcanzar ambas carpetas — ver Dockerfile.
+      context: ..
+      dockerfile: icr-cms-mvp/backend/Dockerfile
     container_name: icr_cms_backend
     restart: unless-stopped
     environment:
@@ -33,18 +36,21 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en el .env antes de desplegar}
       ALLOWED_ORIGIN: https://${SITE_DOMAIN:-inversionesicr.com}
     volumes:
-      - icr_cms_uploads:/app/uploads
+      - icr_cms_uploads:/app/icr-cms-mvp/backend/uploads
     depends_on:
       - db
     networks:
       - icr_cms_internal
       - traefik_public
     labels:
+      # Un solo router: este proceso sirve el sitio en / y el panel en
+      # /admin, los dos bajo el dominio principal (ya no hay CMS_DOMAIN ni
+      # subdominio propio para el CMS).
       - "traefik.enable=true"
-      - "traefik.http.routers.icr-cms.rule=Host(`${CMS_DOMAIN:-cms.inversionesicr.com}`)"
-      - "traefik.http.routers.icr-cms.entrypoints=websecure"
-      - "traefik.http.routers.icr-cms.tls.certresolver=letsencrypt"
-      - "traefik.http.services.icr-cms.loadbalancer.server.port=4100"
+      - "traefik.http.routers.icr-site.rule=Host(`${SITE_DOMAIN:-inversionesicr.com}`)"
+      - "traefik.http.routers.icr-site.entrypoints=websecure"
+      - "traefik.http.routers.icr-site.tls.certresolver=letsencrypt"
+      - "traefik.http.services.icr-site.loadbalancer.server.port=4100"
 
 volumes:
   icr_cms_data:

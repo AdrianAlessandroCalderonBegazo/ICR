@@ -10,6 +10,12 @@ herramientas internas de ICR: Node/Express con capa de servicios,
 PostgreSQL con SQL directo (sin ORM), JWT + bcrypt, y un panel HTML/JS sin
 framework de frontend.
 
+**Este mismo proceso sirve también el sitio público** (`icr-frontend-design1`):
+no son dos servidores por separado, sino un único Express que sirve el
+sitio en `/`, el panel de administración en `/admin` y la API en `/api` —
+un solo proceso, un solo puerto, un solo despliegue. Ver "Estructura" más
+abajo.
+
 ## Colecciones
 
 - **Proyectos** — el portafolio de obras (sector, lugar, métricas, una foto
@@ -33,17 +39,28 @@ framework de frontend.
 ## Estructura
 
 ```
-icr-cms-mvp/
-├── backend/          Express + PostgreSQL (pg), JWT, capa de servicios
-│   ├── src/
-│   ├── scripts/      seed-admin.js — crea el primer usuario ADMIN
-│   └── test/         node --test contra Postgres real
-├── admin/             Panel HTML/JS + Tailwind (sin build step en runtime)
-├── db/
-│   ├── schema.sql
-│   └── seed.sql       Los 6 proyectos migrados desde el CMS anterior
-└── docker-compose.yml Postgres + backend, propio (no comparte con el almacén)
+ICR/                             (raíz del repo)
+├── icr-cms-mvp/
+│   ├── backend/          Express + PostgreSQL (pg), JWT, capa de servicios
+│   │   ├── src/
+│   │   │   └── index.js  Un solo servidor: /api, /uploads, /admin y el sitio
+│   │   ├── scripts/      seed-admin.js — crea el primer usuario ADMIN
+│   │   └── test/         node --test contra Postgres real
+│   ├── admin/             Panel HTML/JS + Tailwind (sin build step en runtime)
+│   ├── db/
+│   │   ├── schema.sql
+│   │   └── seed.sql       Los 6 proyectos migrados desde el CMS anterior
+│   └── docker-compose.yml Postgres + backend, propio (no comparte con el almacén)
+└── icr-frontend-design1/
+    └── public/            El sitio — HTML/JS puro, sin servidor propio;
+                            lo sirve icr-cms-mvp/backend/src/index.js
 ```
+
+`icr-cms-mvp/backend/src/index.js` sirve las cuatro cosas desde el mismo
+proceso: `/api/*` (esta API), `/uploads/*` (imágenes subidas), `/admin`
+(el panel, este mismo repo) y, para cualquier otra ruta, el sitio público
+en `../../icr-frontend-design1/public` — de ahí que `icr-frontend-design1`
+ya no tenga su propio servidor ni su propio `docker-compose.yml`.
 
 ## Por qué backend propio en vez de Decap CMS
 
@@ -77,16 +94,16 @@ PGUSER=postgres PGPASSWORD=postgres PGDATABASE=icr_cms \
 npm run dev   # puerto 4100 por defecto (ver PORT)
 ```
 
-El panel queda en `http://localhost:4100/` y la API pública en
-`http://localhost:4100/api/proyectos`.
+Con ese único comando (`npm run dev`) ya queda arriba todo:
 
-**El sitio web** (`icr-frontend-design1`) necesita que este backend esté
-corriendo para mostrar `/proyectos`, la portada, el chatbot y los banners —
-apunta ahí por defecto en desarrollo (`public/js/config.js`). Sin este
-backend arriba, cada pieza cae a su comportamiento por defecto: el
-portafolio muestra el aviso de "no se pudo cargar", la portada usa sus
-textos de respaldo embebidos, y el chatbot y el banner simplemente no se
-muestran — el resto del sitio funciona igual.
+- El sitio en `http://localhost:4100/`
+- El panel de administración en `http://localhost:4100/admin/`
+- La API en `http://localhost:4100/api/proyectos`
+
+No hace falta correr ni instalar nada en `icr-frontend-design1` — no tiene
+servidor propio, este proceso sirve directamente su carpeta `public/`. Si
+esa carpeta no existe (por ejemplo, un clon parcial del repo), el sitio no
+carga pero el panel y la API siguen funcionando igual.
 
 ### Endpoints de la API
 
@@ -122,9 +139,8 @@ Los dos endpoints de imagen reciben `multipart/form-data` con el archivo en
 el campo `imagen` (JPEG, PNG o WebP, hasta 5MB), lo reescalan a un máximo de
 1600px de lado y lo guardan en `backend/uploads/` (servido en `/uploads/*`).
 Devuelven la fila actualizada, con `imagen_url` apuntando a la ruta pública
-del archivo (ej. `/uploads/<uuid>.jpg`) — el sitio antepone el dominio del
-backend a esa ruta al mostrarla (ver `CMS_ORIGIN` en
-`icr-frontend-design1/public/js/config.js`).
+del archivo (ej. `/uploads/<uuid>.jpg`) — el sitio la usa tal cual, sin
+anteponerle ningún dominio: es el mismo proceso, mismo origen.
 
 `backend/uploads/` no se versiona en git; en producción es un volumen Docker
 propio (`icr_cms_uploads`, ver `docker-compose.yml`) para que las imágenes
@@ -140,22 +156,24 @@ npm run test   # crea/recrea icr_cms_test — nunca toca icr_cms
 ## Producción (VPS)
 
 ```bash
-cp .env.example .env   # completar DB_PASSWORD, JWT_SECRET, CMS_DOMAIN, SITE_DOMAIN
+cd icr-cms-mvp   # el build usa la raíz del repo como contexto, pero el compose sigue viviendo acá
+cp .env.example .env   # completar DB_PASSWORD, JWT_SECRET, SITE_DOMAIN
 docker compose up -d --build
 ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run seed:admin   # una vez, o vía `docker compose exec backend`
 ```
 
-`docker-compose.yml` asume una red externa `traefik_public` ya creada por
-el mismo Traefik que sirve `icr-almacen-mvp` (o el sitio principal) — ver
-ese proyecto para el setup de Traefik si todavía no existe en el VPS.
+`docker-compose.yml` compila con el contexto en la raíz del repo (no en
+`icr-cms-mvp/`), porque la imagen necesita copiar tanto este backend como
+`icr-frontend-design1/public` — ver el Dockerfile. También asume una red
+externa `traefik_public` ya creada por el mismo Traefik que sirve
+`icr-almacen-mvp` — ver ese proyecto para el setup de Traefik si todavía
+no existe en el VPS.
 
-En el sitio (`icr-frontend-design1`), es HTML/JS puro sin paso de build: edita
-`CMS_API_URL` y `CMS_ADMIN_URL` directamente en `public/js/config.js` antes de
-construir su imagen — ver `icr-frontend-design1/README.md`.
-```js
-export const CMS_API_URL = "https://cms.inversionesicr.com/api";
-export const CMS_ADMIN_URL = "https://cms.inversionesicr.com/";
-```
+`icr-frontend-design1` no tiene imagen ni servicio propios: su carpeta
+`public/` se copia dentro de esta misma imagen y la sirve este backend
+(ver `icr-frontend-design1/README.md`). No hay `CMS_API_URL` ni
+`CMS_ADMIN_URL` que configurar para producción — son rutas relativas
+(`/api`, `/admin/`), correctas para cualquier dominio sin tocar código.
 
 Postgres de este módulo es un contenedor y un volumen propios, separados
 de `icr-almacen-mvp` — un incidente o una migración en un sistema no debe

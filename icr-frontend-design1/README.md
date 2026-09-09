@@ -1,15 +1,13 @@
 # ICR — Sitio web (icr-frontend-design1)
 
 Sitio público de **Inversiones ICR**. HTML/JS puro, sin bundler ni framework
-de frontend — mismo stack que [ICR-LOGISTICA](https://github.com/andreTYS/ICR-LOGISTICA)
-(`icr-almacen-mvp`) y que `icr-cms-mvp` de este mismo repo: un servidor
-Express sirviendo un directorio estático como único proceso, sin paso de
-build en runtime.
+de frontend, sin servidor propio: lo sirve `icr-cms-mvp/backend`, el mismo
+proceso que expone el panel de administración y la API — un solo servidor
+para todo, no dos por separado.
 
 ## 🛠️ Tecnologías
 
 * HTML5 + JavaScript (módulos ES nativos, `<script type="module">`)
-* Express (solo para servir `public/` como estático — `server/`)
 * Bootstrap 5 + Bootstrap Icons (vendorizados como CSS estático, sin npm en runtime)
 * CSS3 (hoja de estilos propia, escrita a mano — no hay Tailwind ni preprocesador)
 * `marked` + `DOMPurify` (vendorizados como módulos ESM, para el chatbot)
@@ -18,11 +16,6 @@ build en runtime.
 
 ```text
 icr-frontend-design1/
-├── server/                 Express: sirve public/ como estático
-│   ├── package.json
-│   ├── index.js
-│   └── Dockerfile
-├── docker-compose.yml
 └── public/                 El sitio en sí — cada página es un .html real
     ├── index.html            Inicio
     ├── nosotros.html         Historia, misión, visión y trayectoria
@@ -39,39 +32,44 @@ icr-frontend-design1/
         └── vendor/            Bootstrap, Bootstrap Icons, marked, DOMPurify
 ```
 
-No hay `src/`, no hay paso de `build`, no hay variables de entorno de
-bundler: lo que está en `public/` es exactamente lo que se sirve.
+No hay `src/`, no hay paso de `build`, no hay servidor ni `docker-compose.yml`
+propios: esta carpeta es pura salida estática. Quien la sirve es
+`icr-cms-mvp/backend/src/index.js`, que la monta como estático en `/` (con
+URLs limpias — `/nosotros` resuelve a `nosotros.html`) además de servir su
+propia API en `/api` y su panel en `/admin`.
 
 ## 🚀 Ejecutar el proyecto
 
 ```bash
-cd icr-frontend-design1/server
+cd icr-cms-mvp/backend
 npm install
-npm run dev     # o "npm start" — puerto 5173 por defecto (ver PORT)
+npm run dev
 ```
 
-El sitio queda en `http://localhost:5173/`. Las URLs son limpias
-(`/nosotros`, `/soluciones`, ...): el servidor resuelve `/nosotros` al
-archivo `public/nosotros.html` automáticamente.
+Con ese único comando queda arriba todo: el sitio en `http://localhost:4100/`,
+el panel de administración en `http://localhost:4100/admin/` y la API en
+`http://localhost:4100/api` — ver [`../icr-cms-mvp/README.md`](../icr-cms-mvp/README.md)
+para el detalle (base de datos, variables de entorno, tests).
 
 Para editar contenido estático (textos, imágenes, estructura de una
 página), edita directamente el `.html` correspondiente en `public/` — no
-hace falta recompilar nada.
+hace falta recompilar ni reiniciar nada.
 
 ## 🗂️ Panel de contenido (CMS)
 
 El portafolio de `/proyectos`, la portada de la home, las preguntas del
-chatbot y los banners de promoción no viven en este código: los sirve
-`icr-cms-mvp/`, un backend propio (Node + Express + PostgreSQL) con su
-propio panel de administración — ver
-[`../icr-cms-mvp/README.md`](../icr-cms-mvp/README.md) para levantarlo en
-local y para el detalle de cada colección. Sin ese backend corriendo, cada
-pieza cae a su comportamiento por defecto ("no se pudo cargar el
-portafolio" en `/proyectos`, textos de respaldo en la portada, chatbot y
-banner simplemente ausentes); el resto del sitio sigue funcionando igual.
+chatbot y los banners de promoción no viven en este código: los sirve el
+mismo backend, con su propio panel de administración en `/admin` — ver
+[`../icr-cms-mvp/README.md`](../icr-cms-mvp/README.md) para el detalle de
+cada colección. Sin ese backend corriendo, cada pieza cae a su
+comportamiento por defecto ("no se pudo cargar el portafolio" en
+`/proyectos`, textos de respaldo en la portada, chatbot y banner
+simplemente ausentes) — pero como es el mismo proceso que sirve este sitio,
+si el sitio está arriba, el CMS también lo está.
 
-La URL de ese backend está en `public/js/config.js` (`CMS_API_URL`,
-`CMS_ADMIN_URL`) — edítala ahí antes de desplegar a producción.
+Las rutas de la API y del panel están fijas como relativas
+(`/api`, `/admin/`) en `public/js/config.js` — no hay nada que configurar
+por entorno, funcionan igual en local y en producción bajo cualquier dominio.
 
 ## ⚙️ Contenido pendiente de reemplazar
 
@@ -83,14 +81,3 @@ Antes de publicar, revisar:
   simulador son valores de referencia sin validar contra cifras
   comerciales de ICR; también los datos de contacto (RUC, dirección,
   teléfono, WhatsApp).
-
-## 🐳 Producción (VPS)
-
-```bash
-docker compose up -d --build
-```
-
-`docker-compose.yml` asume una red externa `traefik_public` ya creada por
-el mismo Traefik que sirve `icr-almacen-mvp` e `icr-cms-mvp` — ver esos
-proyectos para el setup de Traefik si todavía no existe en el VPS. Este
-servicio no tiene base de datos propia: es un servidor estático puro.
