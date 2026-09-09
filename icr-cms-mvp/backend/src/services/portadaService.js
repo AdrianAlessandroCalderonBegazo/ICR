@@ -53,15 +53,34 @@ async function update(data) {
   return r.rows[0];
 }
 
-// Separado de update(): la imagen se sube y guarda en un paso propio (ver
-// PUT /admin/portada/imagen), no como parte del payload JSON normal.
-async function setImagen(url) {
+// Las imágenes (fondo del hero, logo) se suben y guardan en un paso propio
+// (ver rutas /admin/portada/imagen y /admin/portada/logo), no como parte del
+// payload JSON normal de update(). "campo" nunca viene del cliente: cada
+// función pública fija el nombre de columna, así que no hay riesgo de
+// inyectar un nombre de columna arbitrario en el SQL interpolado.
+async function setCampoImagen(campo, url) {
   const actual = await get();
   const r = await pool.query(
-    "UPDATE portada SET imagen_url = $1, updated_at = now() WHERE portada_id = $2 RETURNING *",
+    `UPDATE portada SET ${campo} = $1, updated_at = now() WHERE portada_id = $2 RETURNING *`,
     [url, actual.portada_id]
   );
   return r.rows[0];
 }
 
-module.exports = { get, update, setImagen };
+async function setImagen(url) {
+  return setCampoImagen("imagen_url", url);
+}
+
+async function clearImagen() {
+  return setCampoImagen("imagen_url", null);
+}
+
+async function setLogo(url) {
+  return setCampoImagen("logo_url", url);
+}
+
+async function clearLogo() {
+  return setCampoImagen("logo_url", null);
+}
+
+module.exports = { get, update, setImagen, clearImagen, setLogo, clearLogo };

@@ -100,11 +100,23 @@
 
         <form id="portada-form" class="form-card flex flex-col gap-4 max-w-2xl">
           <div class="field-label">
+            Logo del sitio (navbar y footer)
+            <div class="flex items-center gap-4">
+              <img id="portada-logo-preview" class="hidden w-20 h-20 object-contain rounded-lg border border-slate-200 bg-navy-950 p-2" alt="Vista previa" />
+              <div id="portada-logo-placeholder" class="w-20 h-20 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400 text-center px-2">Logo por defecto</div>
+              <input type="file" id="portada-logo-input" accept="image/jpeg,image/png,image/webp" class="field" />
+              <button type="button" id="portada-logo-remove" class="btn-secondary hidden text-xs !py-1.5 !px-3">Quitar</button>
+            </div>
+            <span class="text-xs text-slate-400 font-normal">JPG, PNG o WebP. Se sube al instante al elegir el archivo.</span>
+          </div>
+
+          <div class="field-label">
             Imagen de fondo del hero
             <div class="flex items-center gap-4">
               <img id="portada-imagen-preview" class="hidden w-32 h-20 object-cover rounded-lg border border-slate-200" alt="Vista previa" />
               <div id="portada-imagen-placeholder" class="w-32 h-20 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400 text-center px-2">Sin imagen (usa el fondo por defecto)</div>
               <input type="file" id="portada-imagen-input" accept="image/jpeg,image/png,image/webp" class="field" />
+              <button type="button" id="portada-imagen-remove" class="btn-secondary hidden text-xs !py-1.5 !px-3">Quitar</button>
             </div>
             <span class="text-xs text-slate-400 font-normal">JPG, PNG o WebP. Se sube al instante al elegir el archivo — no hace falta guardar el formulario.</span>
           </div>

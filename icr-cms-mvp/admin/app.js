@@ -354,18 +354,24 @@ const PORTADA_CAMPOS = [
   "cta_primario_texto", "cta_primario_link", "cta_secundario_texto", "cta_secundario_link",
 ];
 
-function setPortadaImagenUI(url) {
-  const preview = document.getElementById("portada-imagen-preview");
-  const placeholder = document.getElementById("portada-imagen-placeholder");
+function setImagePreviewUI(previewId, placeholderId, removeBtnId, url) {
+  const preview = document.getElementById(previewId);
+  const placeholder = document.getElementById(placeholderId);
+  const removeBtn = document.getElementById(removeBtnId);
   if (url) {
     preview.src = url;
     preview.classList.remove("hidden");
     placeholder.classList.add("hidden");
+    removeBtn.classList.remove("hidden");
   } else {
     preview.classList.add("hidden");
     placeholder.classList.remove("hidden");
+    removeBtn.classList.add("hidden");
   }
 }
+
+const setPortadaImagenUI = (url) => setImagePreviewUI("portada-imagen-preview", "portada-imagen-placeholder", "portada-imagen-remove", url);
+const setPortadaLogoUI = (url) => setImagePreviewUI("portada-logo-preview", "portada-logo-placeholder", "portada-logo-remove", url);
 
 async function loadPortada() {
   const json = await api("/portada");
@@ -378,6 +384,7 @@ async function loadPortada() {
     form.querySelector(`[name=${campo}]`).value = json.data[campo];
   });
   setPortadaImagenUI(json.data.imagen_url);
+  setPortadaLogoUI(json.data.logo_url);
 }
 
 document.getElementById("portada-imagen-input").addEventListener("change", async (e) => {
@@ -396,6 +403,46 @@ document.getElementById("portada-imagen-input").addEventListener("change", async
   } finally {
     e.target.value = "";
   }
+});
+
+document.getElementById("portada-imagen-remove").addEventListener("click", async () => {
+  if (!confirm("¿Quitar la imagen de fondo? El hero volverá al fondo por defecto.")) return;
+  const json = await api("/admin/portada/imagen", { method: "DELETE" });
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo quitar la imagen", "error");
+    return;
+  }
+  setPortadaImagenUI(json.data.imagen_url);
+  toast("Imagen quitada");
+});
+
+document.getElementById("portada-logo-input").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const json = await uploadFile("/admin/portada/logo", "PUT", file);
+    if (json.status !== "success") {
+      toast(json.error?.message || "No se pudo subir el logo", "error");
+      return;
+    }
+    setPortadaLogoUI(json.data.logo_url);
+    toast("Logo actualizado");
+  } catch {
+    toast("No se pudo subir el logo", "error");
+  } finally {
+    e.target.value = "";
+  }
+});
+
+document.getElementById("portada-logo-remove").addEventListener("click", async () => {
+  if (!confirm("¿Quitar el logo? El sitio volverá a mostrar el logo por defecto.")) return;
+  const json = await api("/admin/portada/logo", { method: "DELETE" });
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo quitar el logo", "error");
+    return;
+  }
+  setPortadaLogoUI(json.data.logo_url);
+  toast("Logo quitado");
 });
 
 document.getElementById("portada-form").addEventListener("submit", async (e) => {

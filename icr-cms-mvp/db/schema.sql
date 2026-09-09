@@ -70,6 +70,10 @@ CREATE TABLE portada (
     -- /admin/portada/imagen). NULL hasta que se suba una: el sitio conserva
     -- el fondo por defecto definido en el CSS.
     imagen_url      TEXT,
+    -- Logo del sitio (navbar y footer), subido desde el panel (ver POST
+    -- /admin/portada/logo). NULL hasta que se suba uno: el sitio conserva
+    -- el logo por defecto (public/assets/images/logo/logoICR.png).
+    logo_url        TEXT,
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

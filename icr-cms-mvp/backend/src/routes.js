@@ -199,6 +199,29 @@ router.put(
   })
 );
 
+router.delete(
+  "/admin/portada/imagen",
+  requirePermission("portada.update"),
+  handle(async () => portada.clearImagen())
+);
+
+router.put(
+  "/admin/portada/logo",
+  requirePermission("portada.update"),
+  upload.single("imagen"),
+  handle(async (req) => {
+    if (!req.file) throw new AppError("SCHEMA_INVALID", "No se recibió ningún archivo", 400);
+    const url = await processAndSaveImage(req.file);
+    return portada.setLogo(url);
+  })
+);
+
+router.delete(
+  "/admin/portada/logo",
+  requirePermission("portada.update"),
+  handle(async () => portada.clearLogo())
+);
+
 // Maneja errores de multer (tamaño/tipo de archivo, lanzados antes de que el
 // handler de la ruta corra) con el mismo envelope de respuesta que handle().
 router.use((err, req, res, next) => {

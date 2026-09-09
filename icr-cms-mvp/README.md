@@ -21,9 +21,11 @@ abajo.
 - **Proyectos** — el portafolio de obras (sector, lugar, métricas, una foto
   opcional). Es la única colección heredada de la primera versión (Decap).
 - **Portada** — los textos editables del hero de la home (eyebrow, título,
-  descripción, textos y enlaces de los dos botones) más una imagen de fondo
-  opcional. Fila única: siempre existe exactamente una portada, el panel
-  solo permite editarla.
+  descripción, textos y enlaces de los dos botones), una imagen de fondo
+  opcional y el **logo del sitio** (navbar y footer, en todas las páginas),
+  también opcional. Fila única: siempre existe exactamente una portada, el
+  panel solo permite editarla. Tanto la imagen de fondo como el logo se
+  pueden quitar desde el panel para volver al valor por defecto.
 - **Chatbot** — preguntas frecuentes que alimentan el widget de chat del
   sitio. Cada ficha tiene una pregunta y una respuesta en **Markdown**
   (se renderiza en el sitio con `marked` + `dompurify`, así que soporta
@@ -124,7 +126,8 @@ De administración (requieren `Authorization: Bearer <token>` de `/api/auth/logi
 | PUT/DELETE | `/api/admin/proyectos/:slug` | `proyectos.update` / `.delete` |
 | PUT    | `/api/admin/portada`         | `portada.update`   |
 | POST   | `/api/admin/proyectos/:slug/imagen` | `proyectos.update` |
-| PUT    | `/api/admin/portada/imagen`  | `portada.update`   |
+| PUT/DELETE | `/api/admin/portada/imagen`  | `portada.update`   |
+| PUT/DELETE | `/api/admin/portada/logo`    | `portada.update`   |
 | GET/POST | `/api/admin/chatbot`       | `chatbot.list` / `.create` |
 | PUT/DELETE | `/api/admin/chatbot/:id`  | `chatbot.update` / `.delete` |
 | GET/POST | `/api/admin/banners`       | `banners.list` / `.create` |
@@ -133,14 +136,16 @@ De administración (requieren `Authorization: Bearer <token>` de `/api/auth/logi
 El rol `EDITOR` tiene todos los permisos anteriores salvo los de usuarios;
 `ADMIN` tiene acceso total (`*`).
 
-### Imágenes (proyectos y portada)
+### Imágenes (proyectos, fondo de portada y logo)
 
-Los dos endpoints de imagen reciben `multipart/form-data` con el archivo en
+Los endpoints `PUT`/`POST` reciben `multipart/form-data` con el archivo en
 el campo `imagen` (JPEG, PNG o WebP, hasta 5MB), lo reescalan a un máximo de
 1600px de lado y lo guardan en `backend/uploads/` (servido en `/uploads/*`).
-Devuelven la fila actualizada, con `imagen_url` apuntando a la ruta pública
-del archivo (ej. `/uploads/<uuid>.jpg`) — el sitio la usa tal cual, sin
-anteponerle ningún dominio: es el mismo proceso, mismo origen.
+Devuelven la fila actualizada, con `imagen_url` o `logo_url` apuntando a la
+ruta pública del archivo (ej. `/uploads/<uuid>.jpg`) — el sitio la usa tal
+cual, sin anteponerle ningún dominio: es el mismo proceso, mismo origen.
+Los `DELETE` no reciben cuerpo: limpian el campo (vuelve a `null`) y el
+sitio cae de nuevo al fondo/logo por defecto que ya tiene en su HTML/CSS.
 
 `backend/uploads/` no se versiona en git; en producción es un volumen Docker
 propio (`icr_cms_uploads`, ver `docker-compose.yml`) para que las imágenes
