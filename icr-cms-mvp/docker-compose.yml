@@ -49,8 +49,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.icr-site.rule=Host(`${SITE_DOMAIN:-inversionesicr.com}`)"
       - "traefik.http.routers.icr-site.entrypoints=websecure"
-      - "traefik.http.routers.icr-site.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.icr-site.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
       - "traefik.http.services.icr-site.loadbalancer.server.port=4100"
+      # Red por la que Traefik descubre este servicio: con varios routers
+      # Docker en el mismo VPS, Traefik necesita saber cuál usar para este
+      # contenedor si está conectado a más de una red externa.
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
 
 volumes:
   icr_cms_data:
@@ -60,7 +64,9 @@ networks:
   icr_cms_internal:
   traefik_public:
     external: true
-    # Debe coincidir con el nombre de la red externa que ya usa Traefik en el VPS.
+    name: ${TRAEFIK_NETWORK:-traefik-network}
+    # Debe coincidir con el nombre de la red externa que ya usa el Traefik
+    # compartido en el VPS (no un Traefik propio de este proyecto).
     # Deliberadamente NO comparte contenedor ni volumen de Postgres con
     # icr-almacen-mvp: un incidente o migración en un sistema no debe poder
     # afectar al otro.
