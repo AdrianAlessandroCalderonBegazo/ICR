@@ -34,116 +34,50 @@
   </nav>
 
   <main>
-    <section class="inner-page section-padding">
-      <div class="container">
-        <span class="eyebrow blue">SOLUCIONES</span>
-        <h1>Soluciones energéticas para cada desafío.</h1>
-        <p class="lead">
+    <section class="page-header">
+      <div class="page-header-grid"></div>
+      <div class="container position-relative">
+        <span class="eyebrow blue reveal">SOLUCIONES</span>
+        <h1 class="reveal">Soluciones energéticas para cada desafío.</h1>
+        <p class="lead reveal">
           Cada producto responde a un problema concreto: facturas de luz altas,
           cortes que detienen tu operación o infraestructura eléctrica que ya no
           da abasto. Elige el desafío que más se parece al tuyo.
         </p>
+      </div>
+    </section>
+    <section class="page-body" id="soluciones-page">
+      <div class="container">
+        <div class="editor-note productos-error" role="alert" hidden>
+          No se pudo cargar el catálogo en este momento. Intenta recargar la página en unos minutos.
+        </div>
+        <p class="lead mt-4 productos-loading" aria-live="polite">Cargando soluciones…</p>
 
-        <div class="challenge-group mt-5 pt-4">
+        <div class="challenge-group mt-5 pt-4" data-grupo-section="energia-solar" hidden>
           <div class="section-heading reveal">
             <span class="eyebrow blue"><i class="bi bi-sun me-2"></i>DESAFÍO</span>
             <h2>Energía Solar</h2>
             <p>Facturas de luz cada vez más altas y dependencia total de la red eléctrica.</p>
           </div>
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Kit Solar Residencial 3kW</h3>
-                <p>Pensado para hogares con consumo mensual moderado que buscan reducir su recibo de luz.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Paneles monocristalinos de alta eficiencia</li>
-                  <li><i class="bi bi-check2"></i>Inversor con monitoreo remoto vía app</li>
-                  <li><i class="bi bi-check2"></i>Instalación y garantía incluida (10 años)</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Kit Solar Comercial 10kW</h3>
-                <p>Diseñado para negocios y locales comerciales con mayor consumo energético.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Escalable según la demanda del negocio</li>
-                  <li><i class="bi bi-check2"></i>Retorno de inversión estimado en 3 a 5 años</li>
-                  <li><i class="bi bi-check2"></i>Mantenimiento preventivo incluido</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-          </div>
+          <div class="row g-4 mt-2" data-grupo-list="energia-solar"></div>
         </div>
 
-        <div class="challenge-group mt-5 pt-4">
+        <div class="challenge-group mt-5 pt-4" data-grupo-section="respaldo-energetico" hidden>
           <div class="section-heading reveal">
             <span class="eyebrow blue"><i class="bi bi-battery-charging me-2"></i>DESAFÍO</span>
             <h2>Respaldo Energético</h2>
             <p>Cortes de luz que detienen operaciones, dañan equipos o generan pérdidas.</p>
           </div>
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Sistema de Baterías de Respaldo</h3>
-                <p>Entrega continuidad automática ante cortes de luz, sin interrupciones perceptibles.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Activación automática en milisegundos</li>
-                  <li><i class="bi bi-check2"></i>Compatible con sistemas solares existentes</li>
-                  <li><i class="bi bi-check2"></i>Autonomía configurable según tu carga</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Grupo Electrógeno Industrial</h3>
-                <p>Respaldo robusto para instalaciones críticas que no pueden detenerse.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Arranque automático ante corte de red</li>
-                  <li><i class="bi bi-check2"></i>Funciona con diésel o gas</li>
-                  <li><i class="bi bi-check2"></i>Panel de transferencia automática (ATS)</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-          </div>
+          <div class="row g-4 mt-2" data-grupo-list="respaldo-energetico"></div>
         </div>
 
-        <div class="challenge-group mt-5 pt-4">
+        <div class="challenge-group mt-5 pt-4" data-grupo-section="infraestructura" hidden>
           <div class="section-heading reveal">
             <span class="eyebrow blue"><i class="bi bi-lightning-charge me-2"></i>DESAFÍO</span>
             <h2>Infraestructura Energética</h2>
             <p>Instalaciones eléctricas antiguas, inseguras o que no soportan el crecimiento del proyecto.</p>
           </div>
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Diseño e Instalación de Subestaciones</h3>
-                <p>Infraestructura eléctrica a medida para proyectos industriales y comerciales.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Ingeniería certificada de principio a fin</li>
-                  <li><i class="bi bi-check2"></i>Cumplimiento de la normativa eléctrica vigente</li>
-                  <li><i class="bi bi-check2"></i>Supervisión técnica durante toda la obra</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-            <div class="col-md-6">
-              <article class="product-card reveal h-100">
-                <h3>Modernización de Tableros Eléctricos</h3>
-                <p>Actualiza instalaciones antiguas a estándares de seguridad y eficiencia actuales.</p>
-                <ul class="check-list">
-                  <li><i class="bi bi-check2"></i>Diagnóstico eléctrico previo incluido</li>
-                  <li><i class="bi bi-check2"></i>Reducción de riesgos eléctricos</li>
-                  <li><i class="bi bi-check2"></i>Mejora en la eficiencia energética</li>
-                </ul>
-                <a class="btn icr-btn-outline" href="/solicitar-asesoria">Solicitar cotización <i class="bi bi-arrow-right"></i></a>
-              </article>
-            </div>
-          </div>
+          <div class="row g-4 mt-2" data-grupo-list="infraestructura"></div>
         </div>
 
         <div class="cta-section mt-5 rounded-4 px-4 px-lg-5">
@@ -221,6 +155,7 @@
 
   <script type="module" src="/js/site.js"></script>
   <script type="module" src="/js/logo.js"></script>
+  <script type="module" src="/js/soluciones.js"></script>
   <script type="module" src="/js/chatbot.js"></script>
   <script type="module" src="/js/banner.js"></script>
   <script type="module" src="/js/cookies.js"></script>

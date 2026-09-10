@@ -4,6 +4,9 @@ const multer = require("multer");
 const router = express.Router();
 const proyectos = require("./services/projectsService");
 const portada = require("./services/portadaService");
+const productos = require("./services/productosService");
+const nosotros = require("./services/nosotrosService");
+const usuarios = require("./services/usuariosService");
 const chatbot = require("./services/chatbotService");
 const banners = require("./services/bannersService");
 const { AppError } = require("./errors");
@@ -74,6 +77,16 @@ router.get(
 );
 
 router.get(
+  "/productos",
+  handle(async () => productos.listPublic())
+);
+
+router.get(
+  "/nosotros",
+  handle(async () => nosotros.get())
+);
+
+router.get(
   "/chatbot",
   handle(async () => chatbot.listPublic())
 );
@@ -119,6 +132,63 @@ router.put(
   "/admin/portada",
   requirePermission("portada.update"),
   handle(async (req) => portada.update(req.body))
+);
+
+router.get(
+  "/admin/productos",
+  requirePermission("productos.list"),
+  handle(async () => productos.listAdmin())
+);
+
+router.post(
+  "/admin/productos",
+  requirePermission("productos.create"),
+  handle(async (req) => productos.create(req.body))
+);
+
+router.put(
+  "/admin/productos/:id",
+  requirePermission("productos.update"),
+  handle(async (req) => productos.update(req.params.id, req.body))
+);
+
+router.delete(
+  "/admin/productos/:id",
+  requirePermission("productos.delete"),
+  handle(async (req) => {
+    await productos.remove(req.params.id);
+    return { deleted: true };
+  })
+);
+
+router.put(
+  "/admin/nosotros",
+  requirePermission("nosotros.update"),
+  handle(async (req) => nosotros.update(req.body))
+);
+
+router.get(
+  "/admin/usuarios",
+  requirePermission("usuarios.manage"),
+  handle(async () => usuarios.listAdmin())
+);
+
+router.post(
+  "/admin/usuarios",
+  requirePermission("usuarios.manage"),
+  handle(async (req) => usuarios.create(req.body))
+);
+
+router.put(
+  "/admin/usuarios/:id/activo",
+  requirePermission("usuarios.manage"),
+  handle(async (req) => usuarios.setActivo(req.params.id, Boolean(req.body?.activo), { actorId: req.user.usuario_id }))
+);
+
+router.put(
+  "/admin/usuarios/:id/password",
+  requirePermission("usuarios.manage"),
+  handle(async (req) => usuarios.setPassword(req.params.id, req.body?.password))
 );
 
 router.get(

@@ -245,7 +245,8 @@ a { text-decoration: none; }
 .section-padding { padding: 120px 0; }
 .section-heading { max-width: 760px; }
 .section-heading h2,
-.inner-page h1 {
+.inner-page h1,
+.page-header h1 {
   color: var(--icr-navy);
   font-size: clamp(2.2rem, 4vw, 3.4rem);
   font-weight: 900;
@@ -402,6 +403,38 @@ a { text-decoration: none; }
 .stat-card h3 { color: var(--icr-navy); font-weight: 900; margin: 5px 0; overflow-wrap: break-word; }
 .stat-card p { color: var(--icr-muted); margin: 0; }
 
+/* ---- Timeline conectado ("Nuestra trayectoria" en Nosotros) ---- */
+.timeline-item { position: relative; padding-top: 40px; }
+.timeline-dot {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-circle);
+  background: var(--icr-navy);
+  border: 3px solid var(--icr-cyan);
+  transform: translate(-50%, -50%);
+  transition: transform .25s ease, background .25s ease;
+  z-index: 2;
+}
+.timeline-item:hover .timeline-dot { background: var(--icr-cyan); transform: translate(-50%, -50%) scale(1.2); }
+@media (min-width: 992px) {
+  .timeline-col { position: relative; }
+  .timeline-col::before {
+    content: "";
+    position: absolute;
+    top: 19px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--icr-border);
+    z-index: 1;
+  }
+  .timeline-col:first-child::before { left: 50%; }
+  .timeline-col:last-child::before { right: 50%; }
+}
+
 .cta-section {
   background:
     radial-gradient(circle at 75% 50%, rgba(0,255,194,.18), transparent 30%),
@@ -448,6 +481,45 @@ a { text-decoration: none; }
 .inner-page { padding-top: 180px; min-height: 75vh; }
 .inner-page h1 { max-width: 900px; margin: 10px 0 20px; }
 .inner-page h2 { color: var(--icr-navy); font-weight: 900; }
+
+/* ---- Encabezado de páginas internas (Soluciones, Nosotros, Proyectos,
+   Calculadora): banda oscura con el mismo lenguaje visual del hero de
+   Inicio, en vez de que el título arranque sobre fondo blanco plano. ---- */
+.page-header {
+  position: relative;
+  overflow: hidden;
+  padding: 180px 0 70px;
+  background: linear-gradient(120deg, rgba(0,0,73,.98) 0%, rgba(0,0,115,.94) 100%);
+}
+.page-header-grid {
+  position: absolute;
+  inset: 0;
+  opacity: .12;
+  background-image:
+    linear-gradient(30deg, transparent 48%, var(--icr-cyan) 49%, transparent 51%),
+    linear-gradient(150deg, transparent 48%, var(--icr-cyan) 49%, transparent 51%);
+  background-size: 80px 80px;
+}
+.page-header::after {
+  content: "";
+  position: absolute;
+  top: -25%;
+  right: -8%;
+  width: 38%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-circle);
+  background: radial-gradient(circle, rgba(0,255,194,.2), transparent 70%);
+  pointer-events: none;
+}
+.page-header h1 { color: #fff; margin: 10px 0 16px; }
+.page-header .eyebrow.blue { color: var(--icr-cyan); }
+.page-header .lead { color: rgba(255,255,255,.82); max-width: 700px; }
+
+.page-body { padding: 70px 0 120px; min-height: 40vh; }
+@media (max-width: 767.98px) {
+  .page-header { padding: 150px 0 50px; }
+  .page-body { padding: 50px 0 85px; }
+}
 .simple-service-card,
 .product-placeholder,
 .contact-form {

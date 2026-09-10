@@ -57,8 +57,11 @@
       <nav class="max-w-5xl mx-auto px-5 flex gap-1 border-t border-white/10">
         <button class="nav-tab active" data-view="proyectos" type="button">Proyectos</button>
         <button class="nav-tab" data-view="portada" type="button">Portada</button>
+        <button class="nav-tab" data-view="soluciones" type="button">Soluciones</button>
+        <button class="nav-tab" data-view="nosotros" type="button">Nosotros</button>
         <button class="nav-tab" data-view="chatbot" type="button">Chatbot</button>
         <button class="nav-tab" data-view="banners" type="button">Banners</button>
+        <button class="nav-tab" data-view="usuarios" type="button">Usuarios</button>
       </nav>
     </header>
 
@@ -165,6 +168,72 @@
         </form>
       </div>
 
+      <!-- ---------- Vista: Soluciones (productos) ---------- -->
+      <div class="view" id="view-soluciones">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-xl font-bold text-navy-950">Catálogo de Soluciones</h1>
+            <p class="text-sm text-slate-500 mt-1">Se muestran en /soluciones, agrupados por Energía Solar, Respaldo Energético e Infraestructura.</p>
+          </div>
+          <button id="new-producto-btn" class="btn-primary">+ Nuevo producto</button>
+        </div>
+
+        <div class="table-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+                <th class="px-4 py-3">Orden</th>
+                <th class="px-4 py-3">Grupo</th>
+                <th class="px-4 py-3">Título</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="productos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ---------- Vista: Nosotros ---------- -->
+      <div class="view" id="view-nosotros">
+        <div class="mb-6">
+          <h1 class="text-xl font-bold text-navy-950">Página Nosotros</h1>
+          <p class="text-sm text-slate-500 mt-1">Historia, misión/visión y trayectoria de /nosotros. Hay una sola versión — guardar reemplaza el contenido actual.</p>
+        </div>
+
+        <form id="nosotros-form" class="form-card flex flex-col gap-4 max-w-2xl">
+          <label class="field-label">
+            Historia — párrafo 1
+            <textarea name="historia_p1" required rows="3" class="field"></textarea>
+          </label>
+          <label class="field-label">
+            Historia — párrafo 2
+            <textarea name="historia_p2" required rows="3" class="field"></textarea>
+          </label>
+          <label class="field-label">
+            Historia — párrafo 3
+            <textarea name="historia_p3" required rows="3" class="field"></textarea>
+          </label>
+          <label class="field-label">
+            Misión
+            <textarea name="mision" required rows="2" class="field"></textarea>
+          </label>
+          <label class="field-label">
+            Visión
+            <textarea name="vision" required rows="2" class="field"></textarea>
+          </label>
+
+          <div class="field-label">
+            Trayectoria (hitos, en orden)
+            <div id="trayectoria-rows" class="flex flex-col gap-2"></div>
+            <button type="button" id="add-hito-btn" class="btn-secondary self-start text-xs !py-1.5 !px-3 mt-1">+ Agregar hito</button>
+          </div>
+
+          <div id="nosotros-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+          <button type="submit" class="btn-loading btn-primary self-start"><span class="btn-label">Guardar</span></button>
+        </form>
+      </div>
+
       <!-- ---------- Vista: Chatbot ---------- -->
       <div class="view" id="view-chatbot">
         <div class="flex items-center justify-between mb-6">
@@ -211,6 +280,32 @@
               </tr>
             </thead>
             <tbody id="banners-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ---------- Vista: Usuarios ---------- -->
+      <div class="view" id="view-usuarios">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-xl font-bold text-navy-950">Usuarios del panel</h1>
+            <p class="text-sm text-slate-500 mt-1">Solo administradores pueden crear cuentas, desactivarlas o resetear contraseñas.</p>
+          </div>
+          <button id="new-usuario-btn" class="btn-primary">+ Nuevo usuario</button>
+        </div>
+
+        <div class="table-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wide text-slate-500 bg-slate-50">
+                <th class="px-4 py-3">Nombre</th>
+                <th class="px-4 py-3">Email</th>
+                <th class="px-4 py-3">Rol</th>
+                <th class="px-4 py-3">Estado</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="usuarios-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -376,6 +471,119 @@
 
       <div class="flex justify-end gap-2 mt-2">
         <button type="button" id="banner-modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: crear/editar producto (Soluciones) ============ -->
+  <div id="producto-modal" class="hidden modal-overlay">
+    <form id="producto-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 id="producto-modal-title" class="text-lg font-bold text-navy-950">Nuevo producto</h2>
+        <button type="button" id="producto-modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Grupo
+        <select name="grupo" required class="field">
+          <option value="energia-solar">Energía Solar</option>
+          <option value="respaldo-energetico">Respaldo Energético</option>
+          <option value="infraestructura">Infraestructura Energética</option>
+        </select>
+      </label>
+
+      <label class="field-label">
+        Título
+        <input name="titulo" required class="field" />
+      </label>
+
+      <label class="field-label">
+        Descripción
+        <textarea name="descripcion" required rows="3" class="field"></textarea>
+      </label>
+
+      <div class="field-label">
+        Características (checklist)
+        <div id="caracteristicas-rows" class="flex flex-col gap-2"></div>
+        <button type="button" id="add-caracteristica-btn" class="btn-secondary self-start text-xs !py-1.5 !px-3 mt-1">+ Agregar característica</button>
+      </div>
+
+      <label class="field-label">
+        Orden
+        <input type="number" name="orden" value="0" class="field max-w-24" />
+      </label>
+
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-600">
+        <input type="checkbox" name="publicado" checked class="w-4 h-4" />
+        Publicado (visible en el sitio)
+      </label>
+
+      <div id="producto-form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="producto-modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: nuevo usuario ============ -->
+  <div id="usuario-modal" class="hidden modal-overlay">
+    <form id="usuario-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-navy-950">Nuevo usuario</h2>
+        <button type="button" id="usuario-modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Nombre completo
+        <input name="nombre_completo" required class="field" />
+      </label>
+      <label class="field-label">
+        Correo
+        <input name="email" type="email" required class="field" />
+      </label>
+      <label class="field-label">
+        Contraseña inicial
+        <input name="password" type="password" required minlength="8" class="field" />
+        <span class="text-xs text-slate-400 font-normal">Mínimo 8 caracteres. Compártela con la persona para que la cambie luego.</span>
+      </label>
+      <label class="field-label">
+        Rol
+        <select name="rol_codigo" required class="field">
+          <option value="EDITOR">Editor</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+      </label>
+
+      <div id="usuario-form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="usuario-modal-cancel" class="btn-secondary">Cancelar</button>
+        <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Crear usuario</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: cambiar contraseña de un usuario ============ -->
+  <div id="password-modal" class="hidden modal-overlay">
+    <form id="password-form" class="modal-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 id="password-modal-title" class="text-lg font-bold text-navy-950">Cambiar contraseña</h2>
+        <button type="button" id="password-modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <label class="field-label">
+        Nueva contraseña
+        <input name="password" type="password" required minlength="8" class="field" />
+        <span class="text-xs text-slate-400 font-normal">Mínimo 8 caracteres.</span>
+      </label>
+
+      <div id="password-form-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="password-modal-cancel" class="btn-secondary">Cancelar</button>
         <button type="submit" class="btn-loading btn-primary"><span class="btn-label">Guardar</span></button>
       </div>
     </form>

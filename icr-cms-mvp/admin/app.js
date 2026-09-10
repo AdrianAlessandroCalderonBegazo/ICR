@@ -340,8 +340,11 @@ function showView(name) {
 
   if (name === "proyectos") loadProjects();
   if (name === "portada") loadPortada();
+  if (name === "soluciones") loadProductos();
+  if (name === "nosotros") loadNosotros();
   if (name === "chatbot") loadChatbotItems();
   if (name === "banners") loadBanners();
+  if (name === "usuarios") loadUsuarios();
 }
 
 document.querySelectorAll(".nav-tab").forEach((tab) => {
@@ -705,6 +708,382 @@ document.getElementById("banner-form").addEventListener("submit", async (e) => {
     toast(editingBannerId ? "Banner actualizado" : "Banner creado");
     closeBannerModal();
     await loadBanners();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Soluciones (productos) --------
+const GRUPO_LABELS = {
+  "energia-solar": "Energía Solar",
+  "respaldo-energetico": "Respaldo Energético",
+  infraestructura: "Infraestructura",
+};
+
+let productosCache = [];
+let editingProductoId = null;
+
+function productoRow(p) {
+  const estado = p.publicado
+    ? '<span class="badge badge-ok">Publicado</span>'
+    : '<span class="badge badge-muted">Oculto</span>';
+  return `<tr data-id="${p.producto_id}">
+    <td class="px-4 py-3 text-slate-400">${p.orden}</td>
+    <td class="px-4 py-3">${GRUPO_LABELS[p.grupo] || p.grupo}</td>
+    <td class="px-4 py-3 font-semibold text-navy-950">${escapeHtml(p.titulo)}</td>
+    <td class="px-4 py-3">${estado}</td>
+    <td class="px-4 py-3 text-right whitespace-nowrap">
+      <button class="btn-icon edit-producto-btn" title="Editar" type="button">✎</button>
+      <button class="btn-icon danger delete-producto-btn" title="Borrar" type="button">🗑</button>
+    </td>
+  </tr>`;
+}
+
+async function loadProductos() {
+  const json = await api("/admin/productos");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudieron cargar los productos", "error");
+    return;
+  }
+  productosCache = json.data;
+  const tbody = document.getElementById("productos-tbody");
+  tbody.innerHTML = productosCache.length
+    ? productosCache.map(productoRow).join("")
+    : `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-400 italic">Sin productos todavía.</td></tr>`;
+
+  tbody.querySelectorAll(".edit-producto-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.target.closest("tr").dataset.id;
+      openProductoModal(productosCache.find((p) => p.producto_id === id));
+    });
+  });
+  tbody.querySelectorAll(".delete-producto-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => deleteProducto(e.target.closest("tr").dataset.id));
+  });
+}
+
+async function deleteProducto(id) {
+  const producto = productosCache.find((p) => p.producto_id === id);
+  if (!confirm(`¿Borrar "${producto?.titulo || id}"? Esta acción no se puede deshacer.`)) return;
+  const json = await api(`/admin/productos/${encodeURIComponent(id)}`, { method: "DELETE" });
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo borrar", "error");
+    return;
+  }
+  toast("Producto borrado");
+  await loadProductos();
+}
+
+function textListRow(containerId, value = "", placeholder = "") {
+  const row = document.createElement("div");
+  row.className = "flex gap-2 items-center";
+  row.innerHTML = `
+    <input class="field list-item-value" placeholder="${escapeHtml(placeholder)}" value="${escapeHtml(value)}" required />
+    <button type="button" class="btn-icon danger remove-item-btn" title="Quitar">✕</button>
+  `;
+  row.querySelector(".remove-item-btn").addEventListener("click", () => {
+    if (document.querySelectorAll(`#${containerId} > div`).length > 1) row.remove();
+  });
+  return row;
+}
+
+document.getElementById("add-caracteristica-btn").addEventListener("click", () => {
+  const rows = document.getElementById("caracteristicas-rows");
+  rows.appendChild(textListRow("caracteristicas-rows", "", "Ej: Instalación y garantía incluida"));
+});
+
+function openProductoModal(producto = null) {
+  editingProductoId = producto ? producto.producto_id : null;
+  const form = document.getElementById("producto-form");
+  form.reset();
+  document.getElementById("producto-form-error").classList.add("hidden");
+  document.getElementById("producto-modal-title").textContent = producto ? "Editar producto" : "Nuevo producto";
+
+  form.querySelector("[name=grupo]").value = producto?.grupo || "energia-solar";
+  form.querySelector("[name=titulo]").value = producto?.titulo || "";
+  form.querySelector("[name=descripcion]").value = producto?.descripcion || "";
+  form.querySelector("[name=orden]").value = producto?.orden ?? 0;
+  form.querySelector("[name=publicado]").checked = producto ? producto.publicado : true;
+
+  const rows = document.getElementById("caracteristicas-rows");
+  rows.innerHTML = "";
+  const items = producto?.caracteristicas?.length ? producto.caracteristicas : [""];
+  items.forEach((v) => rows.appendChild(textListRow("caracteristicas-rows", v, "Ej: Instalación y garantía incluida")));
+
+  document.getElementById("producto-modal").classList.remove("hidden");
+}
+
+function closeProductoModal() {
+  document.getElementById("producto-modal").classList.add("hidden");
+  editingProductoId = null;
+}
+
+document.getElementById("new-producto-btn").addEventListener("click", () => openProductoModal());
+document.getElementById("producto-modal-close").addEventListener("click", closeProductoModal);
+document.getElementById("producto-modal-cancel").addEventListener("click", closeProductoModal);
+
+document.getElementById("producto-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("producto-form-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const caracteristicas = Array.from(document.querySelectorAll("#caracteristicas-rows .list-item-value"))
+    .map((input) => input.value.trim())
+    .filter(Boolean);
+
+  const body = {
+    grupo: form.querySelector("[name=grupo]").value,
+    titulo: form.querySelector("[name=titulo]").value.trim(),
+    descripcion: form.querySelector("[name=descripcion]").value.trim(),
+    caracteristicas,
+    orden: Number(form.querySelector("[name=orden]").value) || 0,
+    publicado: form.querySelector("[name=publicado]").checked,
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = editingProductoId
+      ? await api(`/admin/productos/${encodeURIComponent(editingProductoId)}`, { method: "PUT", body: JSON.stringify(body) })
+      : await api("/admin/productos", { method: "POST", body: JSON.stringify(body) });
+
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast(editingProductoId ? "Producto actualizado" : "Producto creado");
+    closeProductoModal();
+    await loadProductos();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Nosotros --------
+const NOSOTROS_CAMPOS = ["historia_p1", "historia_p2", "historia_p3", "mision", "vision"];
+
+function hitoRow(anio = "", titulo = "", descripcion = "") {
+  const row = document.createElement("div");
+  row.className = "flex flex-col gap-2 p-3 rounded-lg border border-slate-200";
+  row.innerHTML = `
+    <div class="flex gap-2 items-center">
+      <input class="field hito-anio" placeholder="Año (ej: 2026)" value="${escapeHtml(anio)}" style="max-width: 8rem" required />
+      <input class="field hito-titulo" placeholder="Título del hito" value="${escapeHtml(titulo)}" required />
+      <button type="button" class="btn-icon danger remove-hito-btn" title="Quitar">✕</button>
+    </div>
+    <textarea class="field hito-descripcion" placeholder="Descripción" rows="2" required>${escapeHtml(descripcion)}</textarea>
+  `;
+  row.querySelector(".remove-hito-btn").addEventListener("click", () => {
+    if (document.querySelectorAll("#trayectoria-rows > div").length > 1) row.remove();
+  });
+  return row;
+}
+
+document.getElementById("add-hito-btn").addEventListener("click", () => {
+  document.getElementById("trayectoria-rows").appendChild(hitoRow());
+});
+
+async function loadNosotros() {
+  const json = await api("/nosotros");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudo cargar Nosotros", "error");
+    return;
+  }
+  const form = document.getElementById("nosotros-form");
+  NOSOTROS_CAMPOS.forEach((campo) => {
+    form.querySelector(`[name=${campo}]`).value = json.data[campo];
+  });
+  const rows = document.getElementById("trayectoria-rows");
+  rows.innerHTML = "";
+  const hitos = json.data.trayectoria?.length ? json.data.trayectoria : [{ anio: "", titulo: "", descripcion: "" }];
+  hitos.forEach((h) => rows.appendChild(hitoRow(h.anio, h.titulo, h.descripcion)));
+}
+
+document.getElementById("nosotros-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("nosotros-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {};
+  NOSOTROS_CAMPOS.forEach((campo) => {
+    body[campo] = form.querySelector(`[name=${campo}]`).value.trim();
+  });
+  body.trayectoria = Array.from(document.querySelectorAll("#trayectoria-rows > div")).map((row) => ({
+    anio: row.querySelector(".hito-anio").value.trim(),
+    titulo: row.querySelector(".hito-titulo").value.trim(),
+    descripcion: row.querySelector(".hito-descripcion").value.trim(),
+  }));
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = await api("/admin/nosotros", { method: "PUT", body: JSON.stringify(body) });
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast("Nosotros actualizado");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Usuarios --------
+let usuariosCache = [];
+let resettingPasswordId = null;
+
+const ROL_LABELS = { ADMIN: "Administrador", EDITOR: "Editor" };
+
+function usuarioRow(u) {
+  const estado = u.activo
+    ? '<span class="badge badge-ok">Activo</span>'
+    : '<span class="badge badge-muted">Inactivo</span>';
+  const esYo = getUser()?.usuario_id === u.usuario_id;
+  return `<tr data-id="${u.usuario_id}">
+    <td class="px-4 py-3 font-semibold text-navy-950">${escapeHtml(u.nombre_completo)}${esYo ? ' <span class="text-xs text-slate-400 font-normal">(tú)</span>' : ""}</td>
+    <td class="px-4 py-3 text-slate-500">${escapeHtml(u.email)}</td>
+    <td class="px-4 py-3">${ROL_LABELS[u.rol_codigo] || u.rol_codigo}</td>
+    <td class="px-4 py-3">${estado}</td>
+    <td class="px-4 py-3 text-right whitespace-nowrap">
+      <button class="btn-icon reset-password-btn" title="Cambiar contraseña" type="button">🔑</button>
+      ${esYo ? "" : `<button class="btn-icon toggle-activo-btn" title="${u.activo ? "Desactivar" : "Activar"}" type="button">${u.activo ? "🚫" : "✓"}</button>`}
+    </td>
+  </tr>`;
+}
+
+async function loadUsuarios() {
+  const json = await api("/admin/usuarios");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudieron cargar los usuarios", "error");
+    return;
+  }
+  usuariosCache = json.data;
+  const tbody = document.getElementById("usuarios-tbody");
+  tbody.innerHTML = usuariosCache.length
+    ? usuariosCache.map(usuarioRow).join("")
+    : `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-400 italic">Sin usuarios todavía.</td></tr>`;
+
+  tbody.querySelectorAll(".reset-password-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => openPasswordModal(e.target.closest("tr").dataset.id));
+  });
+  tbody.querySelectorAll(".toggle-activo-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => toggleActivo(e.target.closest("tr").dataset.id));
+  });
+}
+
+async function toggleActivo(id) {
+  const u = usuariosCache.find((x) => x.usuario_id === id);
+  if (!u) return;
+  const nuevoEstado = !u.activo;
+  const verbo = nuevoEstado ? "activar" : "desactivar";
+  if (!confirm(`¿Seguro que quieres ${verbo} a "${u.nombre_completo}"?`)) return;
+  const json = await api(`/admin/usuarios/${encodeURIComponent(id)}/activo`, {
+    method: "PUT",
+    body: JSON.stringify({ activo: nuevoEstado }),
+  });
+  if (json.status !== "success") {
+    toast(json.error?.message || `No se pudo ${verbo}`, "error");
+    return;
+  }
+  toast(nuevoEstado ? "Usuario activado" : "Usuario desactivado");
+  await loadUsuarios();
+}
+
+function openPasswordModal(id) {
+  resettingPasswordId = id;
+  const u = usuariosCache.find((x) => x.usuario_id === id);
+  const form = document.getElementById("password-form");
+  form.reset();
+  document.getElementById("password-form-error").classList.add("hidden");
+  document.getElementById("password-modal-title").textContent = u ? `Cambiar contraseña de ${u.nombre_completo}` : "Cambiar contraseña";
+  document.getElementById("password-modal").classList.remove("hidden");
+}
+
+function closePasswordModal() {
+  document.getElementById("password-modal").classList.add("hidden");
+  resettingPasswordId = null;
+}
+
+document.getElementById("password-modal-close").addEventListener("click", closePasswordModal);
+document.getElementById("password-modal-cancel").addEventListener("click", closePasswordModal);
+
+document.getElementById("password-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("password-form-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = await api(`/admin/usuarios/${encodeURIComponent(resettingPasswordId)}/password`, {
+      method: "PUT",
+      body: JSON.stringify({ password: form.querySelector("[name=password]").value }),
+    });
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo cambiar la contraseña";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast("Contraseña actualizada");
+    closePasswordModal();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+function openUsuarioModal() {
+  const form = document.getElementById("usuario-form");
+  form.reset();
+  document.getElementById("usuario-form-error").classList.add("hidden");
+  document.getElementById("usuario-modal").classList.remove("hidden");
+}
+
+function closeUsuarioModal() {
+  document.getElementById("usuario-modal").classList.add("hidden");
+}
+
+document.getElementById("new-usuario-btn").addEventListener("click", openUsuarioModal);
+document.getElementById("usuario-modal-close").addEventListener("click", closeUsuarioModal);
+document.getElementById("usuario-modal-cancel").addEventListener("click", closeUsuarioModal);
+
+document.getElementById("usuario-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("usuario-form-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {
+    nombre_completo: form.querySelector("[name=nombre_completo]").value.trim(),
+    email: form.querySelector("[name=email]").value.trim(),
+    password: form.querySelector("[name=password]").value,
+    rol_codigo: form.querySelector("[name=rol_codigo]").value,
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = await api("/admin/usuarios", { method: "POST", body: JSON.stringify(body) });
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo crear el usuario";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast("Usuario creado");
+    closeUsuarioModal();
+    await loadUsuarios();
   } finally {
     submitBtn.disabled = false;
     submitBtn.classList.remove("loading");

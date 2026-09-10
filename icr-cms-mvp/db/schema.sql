@@ -77,6 +77,46 @@ CREATE TABLE portada (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ---------- PRODUCTOS (catálogo de Soluciones) ----------
+-- Los 3 grupos de desafío (Energía Solar, Respaldo Energético,
+-- Infraestructura) son parte del contenido de marca del sitio y no cambian
+-- seguido, así que se mantienen como enum fijo aquí (igual que "sector" en
+-- proyectos) en vez de ser una colección aparte editable.
+
+CREATE TABLE productos (
+    producto_id     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    grupo           TEXT NOT NULL CHECK (grupo IN
+                      ('energia-solar', 'respaldo-energetico', 'infraestructura')),
+    titulo          TEXT NOT NULL,
+    descripcion     TEXT NOT NULL,
+    -- Lista de puntos del checklist (ej: "Escalable según la demanda del negocio").
+    caracteristicas JSONB NOT NULL DEFAULT '[]',
+    publicado       BOOLEAN NOT NULL DEFAULT true,
+    orden           INT NOT NULL DEFAULT 0,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT caracteristicas_es_array CHECK (jsonb_typeof(caracteristicas) = 'array')
+);
+
+CREATE INDEX idx_productos_grupo_orden ON productos (grupo, orden);
+
+-- ---------- NOSOTROS (historia, misión/visión y trayectoria) ----------
+-- Tabla singleton, igual que portada: una sola fila que el servicio
+-- actualiza en vez de manejar altas/bajas.
+
+CREATE TABLE nosotros (
+    nosotros_id  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    historia_p1  TEXT NOT NULL DEFAULT '',
+    historia_p2  TEXT NOT NULL DEFAULT '',
+    historia_p3  TEXT NOT NULL DEFAULT '',
+    mision       TEXT NOT NULL DEFAULT '',
+    vision       TEXT NOT NULL DEFAULT '',
+    -- Lista de hitos {anio, titulo, descripcion}, en el orden que se muestran.
+    trayectoria  JSONB NOT NULL DEFAULT '[]',
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT trayectoria_es_array CHECK (jsonb_typeof(trayectoria) = 'array')
+);
+
 -- ---------- CHATBOT (preguntas frecuentes en markdown) ----------
 -- No es un chatbot de IA generativa: son respuestas fijas que el editor
 -- escribe en Markdown desde el panel. El widget del sitio las muestra como

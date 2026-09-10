@@ -15,9 +15,14 @@ const ROLE_PERMISSIONS = {
   EDITOR: [
     "proyectos.list", "proyectos.create", "proyectos.update", "proyectos.delete",
     "portada.update",
+    "productos.list", "productos.create", "productos.update", "productos.delete",
+    "nosotros.update",
     "chatbot.list", "chatbot.create", "chatbot.update", "chatbot.delete",
     "banners.list", "banners.create", "banners.update", "banners.delete",
   ],
+  // "usuarios.*" deliberadamente no está en esta lista: gestionar cuentas
+  // (crear editores, desactivarlos, resetear contraseñas) queda reservado a
+  // ADMIN, que ya tiene acceso vía el wildcard "*" de abajo.
 };
 
 function can(rolCodigo, action) {
