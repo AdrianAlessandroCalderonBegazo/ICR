@@ -47,3 +47,22 @@ test("setImagen guarda la URL en la misma fila (sigue siendo singleton)", async 
   assert.equal(despues.portada_id, antes.portada_id);
   assert.ok(new Date(despues.updated_at) > new Date(antes.updated_at));
 });
+
+test("clearImagen vuelve a dejar imagen_url en null", async () => {
+  await portada.setImagen("/uploads/hero-test.jpg");
+  const despues = await portada.clearImagen();
+  assert.equal(despues.imagen_url, null);
+});
+
+test("setLogo guarda la URL sin afectar imagen_url", async () => {
+  await portada.setImagen("/uploads/hero-test.jpg");
+  const despues = await portada.setLogo("/uploads/logo-test.png");
+  assert.equal(despues.logo_url, "/uploads/logo-test.png");
+  assert.equal(despues.imagen_url, "/uploads/hero-test.jpg");
+});
+
+test("clearLogo vuelve a dejar logo_url en null", async () => {
+  await portada.setLogo("/uploads/logo-test.png");
+  const despues = await portada.clearLogo();
+  assert.equal(despues.logo_url, null);
+});
