@@ -171,6 +171,11 @@ a { text-decoration: none; }
   border-radius: var(--radius-circle);
   background: radial-gradient(circle, rgba(0,255,194,.22), transparent 70%);
   pointer-events: none;
+  animation: hero-glow-pulse 7s ease-in-out infinite;
+}
+@keyframes hero-glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: .75; }
 }
 /* Corte diagonal al pie del hero, en el mismo ángulo que .hero-grid, para
    romper el apilado de secciones en rectángulos planos. */
@@ -193,6 +198,15 @@ a { text-decoration: none; }
     linear-gradient(30deg, transparent 48%, var(--icr-cyan) 49%, transparent 51%),
     linear-gradient(150deg, transparent 48%, var(--icr-cyan) 49%, transparent 51%);
   background-size: 80px 80px;
+  animation: hero-grid-drift 18s linear infinite;
+}
+@keyframes hero-grid-drift {
+  from { background-position: 0 0; }
+  to { background-position: 160px 80px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-section::before,
+  .hero-grid { animation: none; }
 }
 .hero-content { padding-top: 80px; }
 .eyebrow {
@@ -249,18 +263,28 @@ a { text-decoration: none; }
   min-height: 250px;
   padding: 25px 28px;
   border-right: 1px solid var(--icr-border);
-  transition: background .25s ease;
+  border-top: 3px solid transparent;
+  transition: background .25s ease, border-color .25s ease;
 }
-.strength-card:hover { background: var(--icr-light); }
+.strength-card:hover { background: var(--icr-light); border-top-color: var(--icr-cyan); }
 .strengths-row > div:last-child .strength-card { border-right: 0; }
-.strength-card > i {
-  display: block;
+.strength-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-circle);
+  background: var(--icr-light);
   color: var(--icr-cyan);
-  font-size: 2.4rem;
-  margin-bottom: 22px;
-  transition: transform .3s ease;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  transition: transform .3s ease, background .25s ease, color .25s ease;
 }
-.strength-card:hover > i { transform: translateY(-4px); }
+.strength-card:hover .strength-icon {
+  background: var(--icr-cyan);
+  color: #fff;
+  transform: translateY(-4px) rotate(-6deg);
+}
 .strength-card > span {
   display: inline-flex;
   align-items: center;
