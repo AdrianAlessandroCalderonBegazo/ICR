@@ -47,9 +47,17 @@ services:
       # /admin, los dos bajo el dominio principal (ya no hay CMS_DOMAIN ni
       # subdominio propio para el CMS).
       - "traefik.enable=true"
-      - "traefik.http.routers.icr-site.rule=Host(`${SITE_DOMAIN:-inversionesicr.com}`)"
+      # Host() cubre tanto el dominio raíz como www — sin el segundo,
+      # www.inversionesicr.com no coincide con ningún router y Traefik
+      # responde 404 aunque el DNS (CNAME www -> raíz) esté bien.
+      - "traefik.http.routers.icr-site.rule=Host(`${SITE_DOMAIN:-inversionesicr.com}`) || Host(`www.${SITE_DOMAIN:-inversionesicr.com}`)"
       - "traefik.http.routers.icr-site.entrypoints=websecure"
       - "traefik.http.routers.icr-site.tls.certresolver=${TRAEFIK_CERTRESOLVER:-mytlschallenge}"
+      # El certificado debe incluir www como SAN explícito, si no Let's
+      # Encrypt solo emite para el dominio raíz y www carga con advertencia
+      # de certificado inválido aunque el router ya lo enrute bien.
+      - "traefik.http.routers.icr-site.tls.domains[0].main=${SITE_DOMAIN:-inversionesicr.com}"
+      - "traefik.http.routers.icr-site.tls.domains[0].sans=www.${SITE_DOMAIN:-inversionesicr.com}"
       - "traefik.http.services.icr-site.loadbalancer.server.port=4100"
       # Red por la que Traefik descubre este servicio: con varios routers
       # Docker en el mismo VPS, Traefik necesita saber cuál usar para este
