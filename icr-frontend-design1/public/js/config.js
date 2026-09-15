@@ -16,7 +16,7 @@ export const CMS_ORIGIN = "";
 // Tomados del demo de vista previa — confirmar con el equipo antes de publicar.
 export const RUC = "20605309489";
 export const ADDRESS = "Calle Pizarro 325 C, Arequipa";
-export const EMAIL = "contacto@inversionesicr.com";
+export const EMAIL = "proyectos@inversionesicr.com";
 export const PHONE = "982 745 584";
 export const PHONE_TEL = "982745584";
 export const WHATSAPP_URL = "https://wa.me/51983840236?text=Hola%20Inversiones%20ICR%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n.";
