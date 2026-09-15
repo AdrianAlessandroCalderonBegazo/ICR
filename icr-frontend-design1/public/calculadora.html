@@ -34,12 +34,12 @@
   </nav>
 
   <main>
-    <section class="page-header">
+    <section class="page-header" data-page="calculadora">
       <div class="page-header-grid"></div>
       <div class="container position-relative">
-        <span class="eyebrow blue reveal">SIMULADOR</span>
-        <h1 class="reveal">Calcula tu ahorro solar en segundos.</h1>
-        <p class="lead reveal">
+        <span class="eyebrow blue reveal" id="page-header-eyebrow">SIMULADOR</span>
+        <h1 class="reveal" id="page-header-titulo">Calcula tu ahorro solar en segundos.</h1>
+        <p class="lead reveal" id="page-header-texto">
           Ajusta tu recibo de luz y la cobertura que buscas. Es una estimación
           referencial — la propuesta técnica y comercial real la prepara un
           ingeniero tras evaluar tu consumo.
@@ -179,6 +179,7 @@
   <div id="cookie-banner-root"></div>
 
   <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/page-header.js"></script>
   <script type="module" src="/js/logo.js"></script>
   <script type="module" src="/js/calculator-page.js"></script>
   <script type="module" src="/js/chatbot.js"></script>

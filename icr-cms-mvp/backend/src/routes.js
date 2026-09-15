@@ -4,6 +4,7 @@ const multer = require("multer");
 const router = express.Router();
 const proyectos = require("./services/projectsService");
 const portada = require("./services/portadaService");
+const encabezados = require("./services/encabezadosService");
 const productos = require("./services/productosService");
 const nosotros = require("./services/nosotrosService");
 const usuarios = require("./services/usuariosService");
@@ -77,6 +78,11 @@ router.get(
 );
 
 router.get(
+  "/encabezados",
+  handle(async () => encabezados.get())
+);
+
+router.get(
   "/productos",
   handle(async () => productos.listPublic())
 );
@@ -132,6 +138,12 @@ router.put(
   "/admin/portada",
   requirePermission("portada.update"),
   handle(async (req) => portada.update(req.body))
+);
+
+router.put(
+  "/admin/encabezados",
+  requirePermission("encabezados.update"),
+  handle(async (req) => encabezados.update(req.body))
 );
 
 router.get(

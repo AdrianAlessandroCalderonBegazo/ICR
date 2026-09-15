@@ -15,6 +15,7 @@ const ROLE_PERMISSIONS = {
   EDITOR: [
     "proyectos.list", "proyectos.create", "proyectos.update", "proyectos.delete",
     "portada.update",
+    "encabezados.update",
     "productos.list", "productos.create", "productos.update", "productos.delete",
     "nosotros.update",
     "chatbot.list", "chatbot.create", "chatbot.update", "chatbot.delete",

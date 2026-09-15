@@ -72,6 +72,10 @@ INSERT INTO proyectos (slug, sector, lugar, titulo, descripcion, metricas, place
 -- única) y no un olvido.
 INSERT INTO portada DEFAULT VALUES;
 
+-- Encabezados de páginas internas: usa los valores por defecto de la
+-- columna, que ya coinciden con el HTML estático que reemplazan.
+INSERT INTO encabezados_paginas DEFAULT VALUES;
+
 -- Productos: migrados desde el HTML estático de /soluciones.
 INSERT INTO productos (grupo, titulo, descripcion, caracteristicas, orden) VALUES
 (

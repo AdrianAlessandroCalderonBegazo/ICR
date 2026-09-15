@@ -57,6 +57,7 @@
       <nav class="max-w-5xl mx-auto px-5 flex gap-1 border-t border-white/10">
         <button class="nav-tab active" data-view="proyectos" type="button">Proyectos</button>
         <button class="nav-tab" data-view="portada" type="button">Portada</button>
+        <button class="nav-tab" data-view="encabezados" type="button">Encabezados</button>
         <button class="nav-tab" data-view="soluciones" type="button">Soluciones</button>
         <button class="nav-tab" data-view="nosotros" type="button">Nosotros</button>
         <button class="nav-tab" data-view="chatbot" type="button">Chatbot</button>
@@ -165,6 +166,47 @@
           </div>
           <div id="portada-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
           <button type="submit" class="btn-loading btn-primary self-start"><span class="btn-label">Guardar portada</span></button>
+        </form>
+      </div>
+
+      <!-- ---------- Vista: Encabezados de páginas internas ---------- -->
+      <div class="view" id="view-encabezados">
+        <div class="mb-6">
+          <h1 class="text-xl font-bold text-navy-950">Encabezados de páginas internas</h1>
+          <p class="text-sm text-slate-500 mt-1">El eyebrow, título y texto de la banda oscura de Soluciones, Nosotros, Proyectos y Calculadora.</p>
+        </div>
+
+        <form id="encabezados-form" class="form-card flex flex-col gap-6 max-w-2xl">
+          <div class="flex flex-col gap-3">
+            <h2 class="text-sm font-bold text-navy-950 uppercase tracking-wide">Soluciones</h2>
+            <label class="field-label">Eyebrow<input name="soluciones_eyebrow" required class="field" /></label>
+            <label class="field-label">Título<input name="soluciones_titulo" required class="field" /></label>
+            <label class="field-label">Texto<textarea name="soluciones_texto" required rows="2" class="field"></textarea></label>
+          </div>
+
+          <div class="flex flex-col gap-3 pt-5 mt-1 border-t border-slate-200">
+            <h2 class="text-sm font-bold text-navy-950 uppercase tracking-wide">Nosotros</h2>
+            <label class="field-label">Eyebrow<input name="nosotros_eyebrow" required class="field" /></label>
+            <label class="field-label">Título<input name="nosotros_titulo" required class="field" /></label>
+            <label class="field-label">Texto<textarea name="nosotros_texto" required rows="2" class="field"></textarea></label>
+          </div>
+
+          <div class="flex flex-col gap-3 pt-5 mt-1 border-t border-slate-200">
+            <h2 class="text-sm font-bold text-navy-950 uppercase tracking-wide">Proyectos</h2>
+            <label class="field-label">Eyebrow<input name="proyectos_eyebrow" required class="field" /></label>
+            <label class="field-label">Título<input name="proyectos_titulo" required class="field" /></label>
+            <label class="field-label">Texto<textarea name="proyectos_texto" required rows="2" class="field"></textarea></label>
+          </div>
+
+          <div class="flex flex-col gap-3 pt-5 mt-1 border-t border-slate-200">
+            <h2 class="text-sm font-bold text-navy-950 uppercase tracking-wide">Calculadora</h2>
+            <label class="field-label">Eyebrow<input name="calculadora_eyebrow" required class="field" /></label>
+            <label class="field-label">Título<input name="calculadora_titulo" required class="field" /></label>
+            <label class="field-label">Texto<textarea name="calculadora_texto" required rows="2" class="field"></textarea></label>
+          </div>
+
+          <div id="encabezados-error" class="hidden bg-rose-50 text-rose-600 text-sm px-3 py-2 rounded-lg"></div>
+          <button type="submit" class="btn-loading btn-primary self-start"><span class="btn-label">Guardar encabezados</span></button>
         </form>
       </div>
 

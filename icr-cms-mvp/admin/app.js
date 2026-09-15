@@ -340,6 +340,7 @@ function showView(name) {
 
   if (name === "proyectos") loadProjects();
   if (name === "portada") loadPortada();
+  if (name === "encabezados") loadEncabezados();
   if (name === "soluciones") loadProductos();
   if (name === "nosotros") loadNosotros();
   if (name === "chatbot") loadChatbotItems();
@@ -708,6 +709,54 @@ document.getElementById("banner-form").addEventListener("submit", async (e) => {
     toast(editingBannerId ? "Banner actualizado" : "Banner creado");
     closeBannerModal();
     await loadBanners();
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+  }
+});
+
+// -------- Encabezados de páginas internas --------
+const ENCABEZADOS_CAMPOS = [
+  "soluciones_eyebrow", "soluciones_titulo", "soluciones_texto",
+  "nosotros_eyebrow", "nosotros_titulo", "nosotros_texto",
+  "proyectos_eyebrow", "proyectos_titulo", "proyectos_texto",
+  "calculadora_eyebrow", "calculadora_titulo", "calculadora_texto",
+];
+
+async function loadEncabezados() {
+  const json = await api("/encabezados");
+  if (json.status !== "success") {
+    toast(json.error?.message || "No se pudieron cargar los encabezados", "error");
+    return;
+  }
+  const form = document.getElementById("encabezados-form");
+  ENCABEZADOS_CAMPOS.forEach((campo) => {
+    form.querySelector(`[name=${campo}]`).value = json.data[campo];
+  });
+}
+
+document.getElementById("encabezados-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errEl = document.getElementById("encabezados-error");
+  const submitBtn = form.querySelector("button[type=submit]");
+  errEl.classList.add("hidden");
+
+  const body = {};
+  ENCABEZADOS_CAMPOS.forEach((campo) => {
+    body[campo] = form.querySelector(`[name=${campo}]`).value.trim();
+  });
+
+  submitBtn.disabled = true;
+  submitBtn.classList.add("loading");
+  try {
+    const json = await api("/admin/encabezados", { method: "PUT", body: JSON.stringify(body) });
+    if (json.status !== "success") {
+      errEl.textContent = json.error?.message || "No se pudo guardar";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    toast("Encabezados actualizados");
   } finally {
     submitBtn.disabled = false;
     submitBtn.classList.remove("loading");

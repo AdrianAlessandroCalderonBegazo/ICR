@@ -77,6 +77,29 @@ CREATE TABLE portada (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ---------- ENCABEZADOS DE PÁGINAS INTERNAS ----------
+-- Tabla singleton (igual que portada): el eyebrow/título/texto introductorio
+-- de la banda oscura de Soluciones, Nosotros, Proyectos y Calculadora. Es
+-- contenido de encabezado, distinto del cuerpo de cada página (que vive en
+-- sus propias colecciones: productos, nosotros, proyectos).
+
+CREATE TABLE encabezados_paginas (
+    encabezado_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    soluciones_eyebrow  TEXT NOT NULL DEFAULT 'SOLUCIONES',
+    soluciones_titulo   TEXT NOT NULL DEFAULT 'Soluciones energéticas para cada desafío.',
+    soluciones_texto    TEXT NOT NULL DEFAULT 'Cada producto responde a un problema concreto: facturas de luz altas, cortes que detienen tu operación o infraestructura eléctrica que ya no da abasto. Elige el desafío que más se parece al tuyo.',
+    nosotros_eyebrow    TEXT NOT NULL DEFAULT 'NOSOTROS',
+    nosotros_titulo     TEXT NOT NULL DEFAULT 'Ingeniería, tecnología y experiencia.',
+    nosotros_texto      TEXT NOT NULL DEFAULT 'Inversiones ICR desarrolla soluciones energéticas eficientes y confiables para personas, empresas e instituciones.',
+    proyectos_eyebrow   TEXT NOT NULL DEFAULT 'PORTAFOLIO',
+    proyectos_titulo    TEXT NOT NULL DEFAULT 'Proyectos reales, medidos y auditados.',
+    proyectos_texto     TEXT NOT NULL DEFAULT 'Desde plantas de varios megavatios hasta hogares que llevan su recibo de luz a cero. Cada instalación queda monitoreada desde nuestro centro de operaciones.',
+    calculadora_eyebrow TEXT NOT NULL DEFAULT 'SIMULADOR',
+    calculadora_titulo  TEXT NOT NULL DEFAULT 'Calcula tu ahorro solar en segundos.',
+    calculadora_texto   TEXT NOT NULL DEFAULT 'Ajusta tu recibo de luz y la cobertura que buscas. Es una estimación referencial — la propuesta técnica y comercial real la prepara un ingeniero tras evaluar tu consumo.',
+    updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ---------- PRODUCTOS (catálogo de Soluciones) ----------
 -- Los 3 grupos de desafío (Energía Solar, Respaldo Energético,
 -- Infraestructura) son parte del contenido de marca del sitio y no cambian
